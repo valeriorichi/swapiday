@@ -25,7 +25,7 @@ function DebugAccount() {
       <Button
         title="log in as david"
         onPress={() => {
-          signInAs("", "test123");
+          signInAs("daivdmaizil@gmail.com", "test123");
         }}
       ></Button>
       <Button

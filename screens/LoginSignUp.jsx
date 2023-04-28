@@ -1,10 +1,18 @@
-import { Text, View } from 'react-native';
+import { Text, View } from "react-native";
+import React from "react";
+import LogoHeader from "./LogoHeader";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from 'react-native-paper';
-import React from 'react';
+
 
 function LoginSignUp() {
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <SafeAreaView style={{ flex: 1 }}>
+      <LogoHeader />
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>Login Sign Up !</Text>
+      </View>
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text>Login Sign Up !</Text>
       <Button
         icon="camera"
@@ -14,6 +22,7 @@ function LoginSignUp() {
         Press me
       </Button>
     </View>
+    </SafeAreaView>
   );
 }
 

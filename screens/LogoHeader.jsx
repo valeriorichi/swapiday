@@ -6,7 +6,12 @@ export default function LogoHeader() {
     <SafeAreaView>
       <Image
         source={require("../assets/Header-Logo.png")}
-        style={{ width: 180, height: 180, alignSelf: "center", marginTop: -50 }}
+        style={{
+          width: "90%",
+          alignSelf: "center",
+          marginTop: -70,
+          marginBottom: -85,
+        }}
         resizeMode="contain"
       />
     </SafeAreaView>

@@ -1,6 +1,5 @@
 import { Text, View, Image, TouchableOpacity } from "react-native";
 import React from "react";
-import Comments from "./Comments";
 
 function Landing() {
   return (

@@ -2,6 +2,8 @@ import React from "react";
 import { View, Text } from "react-native";
 import { ProgressBar } from "react-native-paper";
 
+// currently not rendering anywhere, will need to render through the userProfile page
+
 const Reviews = () => {
   return (
     <View>

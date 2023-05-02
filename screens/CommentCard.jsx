@@ -4,7 +4,7 @@ import { Avatar } from "react-native-paper";
 
 const CommentCard = ({ user, comment }) => {
   return (
-    <View style={{ flexDirection: "row", marginVertical: 10, marginLeft: 50 }}>
+    <View style={{ flexDirection: "row", marginVertical: 10, marginLeft: 20 }}>
       <Avatar.Image source={{ uri: user.avatar }} size={40} />
       <View style={{ marginLeft: 10 }}>
         <Text>{user.name}</Text>

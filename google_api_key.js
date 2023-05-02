@@ -1,0 +1,3 @@
+GOOGLE_API_KEY = "AIzaSyD78w2VcYnsveoF7QFyZ2x0vDIHz0SHgko";
+
+export default GOOGLE_API_KEY;

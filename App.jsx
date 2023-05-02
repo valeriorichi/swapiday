@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "./firebase";
+import { auth } from "./config/firebase";
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -17,6 +17,7 @@ import {
   MD3LightTheme as DefaultTheme,
 } from "react-native-paper";
 import Search from "./screens/Search";
+import Chat from "./screens/Chat";
 
 const Tab = createBottomTabNavigator();
 
@@ -33,6 +34,7 @@ export default function App() {
             <Tab.Screen name="Listing Page" component={ListingPage} />
             <Tab.Screen name="Login/Sign up" component={LoginSignUp} />
             <Tab.Screen name="My Profile" component={UserProfile} />
+            <Tab.Screen name="Chat" component={Chat} />
             <Tab.Screen name="Debug" component={DebugAccount} />
           </Tab.Navigator>
         </NavigationContainer>

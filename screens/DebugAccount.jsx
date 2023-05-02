@@ -2,7 +2,7 @@ import { Button, Text, View } from "react-native";
 import React from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth } from "../config/firebase";
 
 function DebugAccount() {
   const { currentUser, setCurrentUser } = useAuth();

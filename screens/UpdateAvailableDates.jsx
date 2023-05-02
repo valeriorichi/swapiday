@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import WantToVisit from "./WantToVisit";
 
-const UpdateListHouse = () => {
+const UpdateAvailableDates = () => {
   const [fromDate, setFromDate] = useState(new Date());
   const [untilDate, setUntilDate] = useState(new Date());
   const [dateList, setDateList] = useState([]);
@@ -50,10 +51,11 @@ const UpdateListHouse = () => {
       <View style={styles.addButtonContainer}>
         <Button title="Add Date" onPress={handleAddDate} />
       </View>
-      <View style={styles.dateListContainer}>
+      <View style={styles.dateListContyuainer}>
         <Text style={styles.heading}>Your Listed Dates:</Text>
         {dateListItems}
       </View>
+      <WantToVisit />
     </View>
   );
 };
@@ -91,4 +93,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default UpdateListHouse;
+export default UpdateAvailableDates;

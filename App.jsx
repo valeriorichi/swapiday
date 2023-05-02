@@ -7,6 +7,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Landing from "./screens/Landing";
 import HomeList from "./screens/HomeList";
 import AddHome from "./screens/AddHome";
+import ListingPage from "./screens/ListingPage";
 import LoginSignUp from "./screens/LoginSignUp";
 import UserProfile from "./screens/UserProfile";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
@@ -29,6 +30,7 @@ export default function App() {
             <Tab.Screen name="Search" component={Search} />
             <Tab.Screen name="Homes" component={HomeList} />
             <Tab.Screen name="List a home" component={AddHome} />
+            <Tab.Screen name="Listing Page" component={ListingPage} />
             <Tab.Screen name="Login/Sign up" component={LoginSignUp} />
             <Tab.Screen name="My Profile" component={UserProfile} />
             <Tab.Screen name="Debug" component={DebugAccount} />

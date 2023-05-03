@@ -74,7 +74,7 @@ function ListingPage() {
   const addToWishlist = () => {
     // For now, display an alert message
     alert("Redirecting to WishList");
-    //navigation.navigate('Wishlist');
+    //navigation.navigate('Wish list');
   };
 
   const goToChat = () => {

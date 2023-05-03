@@ -1,9 +1,12 @@
+
 import { Text, ScrollView } from 'react-native';
 import { Button } from 'react-native-paper';
 import React from 'react';
 import { useState } from 'react';
 import Login from './Login';
 import SignUp from './SignUp';
+
+
 
 function LoginSignUp() {
   const [login, setLogin] = useState(false);
@@ -19,6 +22,7 @@ function LoginSignUp() {
   };
 
   return (
+
     <ScrollView>
       {login ? (
         <Login />
@@ -39,6 +43,7 @@ function LoginSignUp() {
         </Button>
       )}
     </ScrollView>
+
   );
 }
 

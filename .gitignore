@@ -11,7 +11,7 @@ npm-debug.*
 web-build/
 firebase.js
 google_api_key.js
-
+*.env
 # macOS
 .DS_Store
 

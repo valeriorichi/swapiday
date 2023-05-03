@@ -9,6 +9,7 @@ import HomeList from './screens/HomeList';
 import AddHome from './screens/AddHome';
 import LoginSignUp from './screens/LoginSignUp';
 import UserProfile from './screens/UserProfile';
+
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import DebugAccount from './screens/DebugAccount';
 import {

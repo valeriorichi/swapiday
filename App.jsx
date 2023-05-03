@@ -1,4 +1,3 @@
-
 import { StyleSheet } from "react-native";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./config/firebase";
@@ -12,6 +11,7 @@ import ListingPage from "./screens/ListingPage";
 import UpdateListing from "./screens/UpdateListing";
 import LoginSignUp from "./screens/LoginSignUp";
 import UserProfile from "./screens/UserProfile";
+import RateForm from "./screens/RateForm";
 import Reviews from "./screens/Reviews";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import DebugAccount from "./screens/DebugAccount";
@@ -41,6 +41,7 @@ export default function App() {
             <Tab.Screen name="UpdateListing" component={UpdateListing} />
             <Tab.Screen name="Reviews" component={Reviews} />
             <Tab.Screen name="Debug" component={DebugAccount} />
+            <Tab.Screen name="RateForm" component={RateForm} />
           </Tab.Navigator>
         </NavigationContainer>
       </AuthProvider>

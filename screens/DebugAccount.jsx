@@ -1,8 +1,8 @@
-import { Button, Text, View } from "react-native";
-import React from "react";
-import { useAuth } from "../contexts/AuthContext";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../config/firebase";
+import { Button, Text, View } from 'react-native';
+import React from 'react';
+import { useAuth } from '../contexts/AuthContext';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../config/firebase';
 
 function DebugAccount() {
   const { currentUser, setCurrentUser } = useAuth();
@@ -15,35 +15,35 @@ function DebugAccount() {
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Button
         title="log in as quinn"
         onPress={() => {
-          signInAs("quinnlord404@gmail.com", "test123");
+          signInAs('quinnlord404@gmail.com', 'test123');
         }}
       ></Button>
       <Button
         title="log in as david"
         onPress={() => {
-          signInAs("daivdmaizil@gmail.com", "test123");
+          signInAs('daivdmaizil@gmail.com', 'test123');
         }}
       ></Button>
       <Button
         title="log in as adam"
         onPress={() => {
-          signInAs("adamlindley98@gmail.com", "test123");
+          signInAs('adamlindley98@gmail.com', 'test123');
         }}
       ></Button>
       <Button
         title="log in as mike"
         onPress={() => {
-          signInAs("", "test123");
+          signInAs('michael.dobinson@gmail.com', 'test123');
         }}
       ></Button>
       <Button
         title="log in as val"
         onPress={() => {
-          signInAs("", "test123");
+          signInAs('val@email.com', 'test123');
         }}
       ></Button>
     </View>

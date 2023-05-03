@@ -19,13 +19,8 @@ function Login() {
     }
   };
 
-  const showUser = () => {
-    return <Text>{auth.currentUser.email}</Text>;
-  };
-
   return (
     <View>
-      {showUser() /* test to see which user is logged in */}
       <Text>{'\n'} </Text>
       <TextInput
         label="Email"

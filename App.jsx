@@ -39,6 +39,7 @@ export default function App() {
             <Tab.Screen name="Chat" component={Chat} />
             <Tab.Screen name="UpdateListing" component={UpdateListing} />
             <Tab.Screen name="Reviews" component={Reviews} />
+            <Tab.Screen name="Errors" component={ErrorPage} />
             <Tab.Screen name="Debug" component={DebugAccount} />
           </Tab.Navigator>
         </NavigationContainer>

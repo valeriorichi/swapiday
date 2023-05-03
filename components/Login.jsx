@@ -1,27 +1,35 @@
-import React from 'react';
-import { View, Text } from 'react-native';
-import { TextInput, Button } from 'react-native-paper';
-import { useState } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../config/firebase';
+import React from "react";
+import { View, Text } from "react-native";
+import { TextInput, Button } from "react-native-paper";
+import { useState } from "react";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../config/firebase";
+import { useAuth } from "../contexts/AuthContext";
 
-function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+function Login({ navigate }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { currentUser, setCurrentUser } = useAuth();
 
   const handleLogin = () => {
-    if (email !== '' && password !== '') {
+    if (email !== "" && password !== "") {
       signInWithEmailAndPassword(auth, email, password)
-        .then(() => alert('Login success'))
+        .then(() => {
+          alert("Login success");
+          setCurrentUser(email);
+        })
+        .then(() => {
+          console.log(currentUser);
+        })
         .catch((err) => alert(`Login err: ${err}`));
-    } else if (email === '' || password === '') {
-      alert('Please fill out all fields');
+    } else if (email === "" || password === "") {
+      alert("Please fill out all fields");
     }
   };
 
   return (
     <View>
-      <Text>{'\n'} </Text>
+      <Text>{"\n"} </Text>
       <TextInput
         label="Email"
         value={email}
@@ -32,7 +40,7 @@ function Login() {
         onChangeText={(email) => setEmail(email)}
         width={300}
       />
-      <Text>{'\n'}</Text>
+      <Text>{"\n"}</Text>
       <TextInput
         label="Password"
         autoCapitalize="none"
@@ -43,10 +51,10 @@ function Login() {
         value={password}
         onChangeText={(password) => setPassword(password)}
       />
-      <Text>{'\n'}</Text>
+      <Text>{"\n"}</Text>
       <Button onPress={handleLogin} buttonColor="#39C67F" mode="contained">
-        {' '}
-        Log In!{' '}
+        {" "}
+        Log In!{" "}
       </Button>
     </View>
   );

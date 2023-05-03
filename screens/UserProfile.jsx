@@ -1,9 +1,14 @@
 import { Text, View, Image } from "react-native";
-import React from "react";
+import { Title } from "react-native-paper";
+import React, { useContext } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "react-native-paper";
+import { useAuth } from "../contexts/AuthContext";
 
 function UserProfile() {
+  const { currentUser, setCurrentUser } = useAuth();
+  //still need to create logout button
+  // console.log(currentUser.uid);
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View
@@ -13,6 +18,16 @@ function UserProfile() {
           alignItems: "center",
         }}
       >
+        <View>
+          <Text>{currentUser.uid}</Text>
+          <Button
+            modeValue="contained"
+            title="Logout"
+            onPress={() => setCurrentUser("")}
+          >
+            Log out
+          </Button>
+        </View>
         <View
           style={{
             width: "90%",

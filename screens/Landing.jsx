@@ -1,7 +1,9 @@
-import { Text, View, Image, TouchableOpacity } from "react-native";
+import { Text, View, Image } from "react-native";
+import { Button } from "react-native-paper";
 import React from "react";
+import { useAuth } from "../contexts/AuthContext";
 
-function Landing() {
+function Landing({ navigation }) {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Image
@@ -10,20 +12,13 @@ function Landing() {
         resizeMode="contain"
       />
       <View style={{ marginTop: 20 }}>
-        <TouchableOpacity
-          style={{
-            backgroundColor: "#7bd060",
-            padding: 10,
-            borderRadius: 5,
-            width: 100,
-          }}
+        <Button
+          mode="contained"
+          buttonColor="#39C67F"
+          onPress={() => navigation.navigate("LoginSignUp")}
         >
-          <Text
-            style={{ color: "black", fontWeight: "bold", textAlign: "center" }}
-          >
-            Login
-          </Text>
-        </TouchableOpacity>
+          Log in
+        </Button>
       </View>
     </View>
   );

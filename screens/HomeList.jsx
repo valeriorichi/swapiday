@@ -17,6 +17,7 @@ const homeExample = {
   bedrooms: "4",
   type: "flat",
 };
+import UpdateAvailableDates from "./UpdateListing";
 
 function HomeList() {
   return (

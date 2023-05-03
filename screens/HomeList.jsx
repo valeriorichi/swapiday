@@ -2,7 +2,7 @@ import { Text, View } from "react-native";
 import React from "react";
 import LogoHeader from "./LogoHeader";
 import { SafeAreaView } from "react-native-safe-area-context";
-import UpdateAvailableDates from "./UpdateAvailableDates";
+import UpdateAvailableDates from "./UpdateListing";
 
 function HomeList() {
   return (

@@ -8,8 +8,10 @@ import Landing from "./screens/Landing";
 import HomeList from "./screens/HomeList";
 import AddHome from "./screens/AddHome";
 import ListingPage from "./screens/ListingPage";
+import UpdateListing from "./screens/UpdateListing";
 import LoginSignUp from "./screens/LoginSignUp";
 import UserProfile from "./screens/UserProfile";
+import Reviews from "./screens/Reviews";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import DebugAccount from "./screens/DebugAccount";
 import {
@@ -35,6 +37,8 @@ export default function App() {
             <Tab.Screen name="Login/Sign up" component={LoginSignUp} />
             <Tab.Screen name="My Profile" component={UserProfile} />
             <Tab.Screen name="Chat" component={Chat} />
+            <Tab.Screen name="UpdateListing" component={UpdateListing} />
+            <Tab.Screen name="Reviews" component={Reviews} />
             <Tab.Screen name="Debug" component={DebugAccount} />
           </Tab.Navigator>
         </NavigationContainer>

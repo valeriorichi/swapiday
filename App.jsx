@@ -11,7 +11,6 @@ import ListingPage from "./screens/ListingPage";
 import UpdateListing from "./screens/UpdateListing";
 import LoginSignUp from "./screens/LoginSignUp";
 import UserProfile from "./screens/UserProfile";
-import ErrorPage from "./screens/ErrorPage.jsx";
 import Reviews from "./screens/Reviews";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import DebugAccount from "./screens/DebugAccount";
@@ -21,6 +20,7 @@ import {
 } from "react-native-paper";
 import Search from "./screens/Search";
 import Chat from "./screens/Chat";
+import ErrorPage from "./screens/ErrorPage.jsx";
 
 const Tab = createBottomTabNavigator();
 

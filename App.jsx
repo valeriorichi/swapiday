@@ -20,7 +20,7 @@ import {
 } from "react-native-paper";
 import Search from "./screens/Search";
 import Chat from "./screens/Chat";
-import ErrorPage from "./screens/ErrorPage.jsx";
+
 
 const Tab = createBottomTabNavigator();
 

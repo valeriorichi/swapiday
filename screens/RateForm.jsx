@@ -3,8 +3,6 @@ import { View, Text, TouchableOpacity, Button } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 const RateForm = () => {
-  // const reviewsRating = { cleanliness: [], communication: [], location: [] };
-
   const [ratings, setRatings] = useState({
     cleanliness: 0,
     location: 0,
@@ -41,6 +39,18 @@ const RateForm = () => {
     });
   };
 
+  const calculateAverages = () => {
+    const averages = {};
+    for (const [category, ratings] of Object.entries(reviewsRating)) {
+      const sum = ratings.reduce((acc, cur) => acc + cur, 0);
+      const average = sum / ratings.length || 0;
+      averages[category] = average;
+    }
+    return averages;
+  };
+
+  const averages = calculateAverages();
+
   return (
     <View>
       <CategoryItem
@@ -61,6 +71,13 @@ const RateForm = () => {
       <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
         <Button title="Submit" onPress={handleSubmit} />
         <Button title="Clear" onPress={handleClear} />
+      </View>
+      <View style={{ marginTop: 20 }}>
+        {Object.entries(averages).map(([category, average]) => (
+          <Text key={category}>
+            {category}: {average.toFixed(1)}
+          </Text>
+        ))}
       </View>
     </View>
   );

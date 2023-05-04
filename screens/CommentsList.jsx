@@ -15,6 +15,7 @@ const initialComments = [
 const CommentsList = () => {
   const [comments, setComments] = useState(initialComments);
   const [newComment, setNewComment] = useState("");
+  const currentUser = "User"; // Replace with the username of the logged-in user
 
   const handleAddComment = () => {
     const id = comments.length + 1;
@@ -47,6 +48,7 @@ const CommentsList = () => {
           user={comment}
           comment={comment}
           onDelete={handleDeleteComment}
+          currentUser={currentUser}
         />
       ))}
       <TextInput

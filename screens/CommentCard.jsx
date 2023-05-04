@@ -2,7 +2,9 @@ import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { Avatar } from "react-native-paper";
 
-const CommentCard = ({ user, comment, onDelete }) => {
+const CommentCard = ({ user, comment, onDelete, currentUser }) => {
+  const isAuthor = currentUser === comment.name;
+
   return (
     <View style={{ flexDirection: "row", marginVertical: 10, marginLeft: 20 }}>
       <Avatar.Image source={{ uri: user.avatar }} size={40} />
@@ -10,9 +12,11 @@ const CommentCard = ({ user, comment, onDelete }) => {
         <Text>{user.name}</Text>
         <Text style={{ color: "grey", fontSize: 12 }}>{comment.date}</Text>
         <Text style={{ marginTop: 5 }}>{comment.body}</Text>
-        <TouchableOpacity onPress={() => onDelete(comment.id)}>
-          <Text style={{ color: "red", marginTop: 5 }}>Delete</Text>
-        </TouchableOpacity>
+        {isAuthor && (
+          <TouchableOpacity onPress={() => onDelete(comment.id)}>
+            <Text style={{ color: "red", marginTop: 5 }}>Delete</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );

@@ -17,7 +17,6 @@ function LoginSignUp() {
   const signInAs = (email, password) => {
     signInWithEmailAndPassword(auth, email, password).then((userCredential) => {
       setCurrentUser(userCredential.user);
-      console.log('currentUser :>> ', currentUser);
     });
   };
 

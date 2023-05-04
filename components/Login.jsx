@@ -19,9 +19,7 @@ function Login() {
           setCurrentUser(email);
           setIsLoggedIn(true);
         })
-        .then(() => {
-          console.log(currentUser, 'user');
-        })
+
         .catch((err) => alert(`Login err: ${err}`));
     } else if (email === '' || password === '') {
       alert('Please fill out all fields');

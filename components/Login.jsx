@@ -5,11 +5,13 @@ import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../config/firebase";
 import { useAuth } from "../contexts/AuthContext";
+import { useLoggedIn } from "../contexts/LoggedInContext";
 
 function Login({ navigate }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { currentUser, setCurrentUser } = useAuth();
+  const { isLoggedIn, setIsLoggedIn } = useLoggedIn();
 
   const handleLogin = () => {
     if (email !== "" && password !== "") {
@@ -17,9 +19,10 @@ function Login({ navigate }) {
         .then(() => {
           alert("Login success");
           setCurrentUser(email);
+          setIsLoggedIn(true);
         })
         .then(() => {
-          console.log(currentUser);
+          console.log(currentUser, "user");
         })
         .catch((err) => alert(`Login err: ${err}`));
     } else if (email === "" || password === "") {

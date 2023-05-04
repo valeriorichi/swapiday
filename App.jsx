@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./config/firebase";
-import * as React from "react";
+import React, { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Landing from "./screens/Landing";
@@ -21,40 +21,48 @@ import {
 import Search from "./screens/Search";
 import Chat from "./screens/Chat";
 import { createStackNavigator } from "@react-navigation/stack";
+import { useLoggedIn, LoggedInProvider } from "./contexts/LoggedInContext";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
+const MainNavigator = () => {
+  return (
+    <Tab.Navigator>
+      <Tab.Screen name="Search" component={Search} />
+      <Tab.Screen name="Homes" component={HomeList} />
+      <Tab.Screen name="List a home" component={AddHome} />
+      <Tab.Screen name="Listing Page" component={ListingPage} />
+      <Tab.Screen name="Login/Sign up" component={LoginSignUp} />
+      <Tab.Screen name="My Profile" component={UserProfile} />
+      <Tab.Screen name="Chat" component={Chat} />
+      <Tab.Screen name="UpdateListing" component={UpdateListing} />
+      <Tab.Screen name="Reviews" component={Reviews} />
+      <Tab.Screen name="Debug" component={DebugAccount} />
+    </Tab.Navigator>
+  );
+};
+
 export default function App() {
   const { currentUser, setCurrentUser } = useAuth();
-  return currentUser ? (
+  const { isLoggedIn, setIsLoggedIn } = useLoggedIn();
+
+  return (
     <PaperProvider theme={theme}>
       <AuthProvider>
         <NavigationContainer>
-          <Tab.Navigator>
-            <Tab.Screen name="Landing" component={Landing} />
-            <Tab.Screen name="Search" component={Search} />
-            <Tab.Screen name="Homes" component={HomeList} />
-            <Tab.Screen name="List a home" component={AddHome} />
-            <Tab.Screen name="Listing Page" component={ListingPage} />
-            <Tab.Screen name="Login/Sign up" component={LoginSignUp} />
-            <Tab.Screen name="My Profile" component={UserProfile} />
-            <Tab.Screen name="Chat" component={Chat} />
-            <Tab.Screen name="UpdateListing" component={UpdateListing} />
-            <Tab.Screen name="Reviews" component={Reviews} />
-            <Tab.Screen name="Debug" component={DebugAccount} />
-          </Tab.Navigator>
-        </NavigationContainer>
-      </AuthProvider>
-    </PaperProvider>
-  ) : (
-    <PaperProvider theme={theme}>
-      <AuthProvider>
-        <NavigationContainer>
-          <Stack.Navigator>
-            <Stack.Screen name="Landing" component={Landing} />
-            <Stack.Screen name="LoginSignUp" component={LoginSignUp} />
-          </Stack.Navigator>
+          <LoggedInProvider>
+            {!isLoggedIn ? (
+              <>
+                <Stack.Navigator>
+                  <Stack.Screen name="Landing" component={Landing} />
+                  <Stack.Screen name="LoginSignUp" component={LoginSignUp} />
+                </Stack.Navigator>
+              </>
+            ) : (
+              <MainNavigator />
+            )}
+          </LoggedInProvider>
         </NavigationContainer>
       </AuthProvider>
     </PaperProvider>

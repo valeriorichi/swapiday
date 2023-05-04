@@ -17,12 +17,11 @@ const testedUser = {
         rating: 4.85,
         review: 17
     },
-
     available_dates: [
         { from: "15 May 2023", to: "25 May 2023" },
         { from: "23 June 2023", to: "10 July 2023" },
-    ]
-
+    ],
+    wishList: ['testedUser', 'testedUser1', 'testedUser2',]
 
 };
 

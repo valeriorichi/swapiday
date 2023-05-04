@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
-import { useState } from 'react';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../config/firebase';
 
 function SignUp() {
   const [email, setEmail] = useState('');
@@ -9,22 +10,23 @@ function SignUp() {
   const [confirm, setConfirm] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [dateOfBirth, setDateOfBirth] = useState('');
 
   const handleSignUp = () => {
     if (password !== confirm) {
       alert('Passwords do not match');
+    } else if (
+      email === '' ||
+      password === '' ||
+      firstName === '' ||
+      lastName === ''
+    ) {
+      alert('Please fill out all fields');
     } else if (password.length < 8) {
       alert('Password must be at least 8 characters');
     } else {
-      const user = {
-        email: email,
-        password: password,
-        firstName: firstName,
-        lastName: lastName,
-        dateOfBirth: dateOfBirth,
-      };
-      alert('User created!');
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(() => alert('Signup success'))
+        .catch((err) => alert(`Login err: ${err}`));
     }
   };
 
@@ -32,6 +34,7 @@ function SignUp() {
     <View style>
       <Text> </Text>
       <TextInput
+        autoCapitalize="none"
         keyboardType="email-address"
         label="Email"
         value={email}
@@ -71,16 +74,6 @@ function SignUp() {
         }}
       />
 
-      <TextInput
-        label="Date of Birth"
-        keyboardType="numeric"
-        width={300}
-        value={dateOfBirth}
-        placeholder="DD/MM/YYYY"
-        onChangeText={(dateOfBirth) => {
-          setDateOfBirth(dateOfBirth);
-        }}
-      />
       <Text>{'\n'}</Text>
       <Button buttonColor="#39C67F" mode="contained" onPress={handleSignUp}>
         Sign Up!

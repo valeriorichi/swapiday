@@ -10,7 +10,6 @@ const initialComments = [
     date: "May 2023",
     body: "This is the first comment.",
   },
-  // rest of the comments
 ];
 
 const CommentsList = () => {
@@ -35,10 +34,20 @@ const CommentsList = () => {
     setNewComment("");
   };
 
+  const handleDeleteComment = (id) => {
+    const updatedComments = comments.filter((comment) => comment.id !== id);
+    setComments(updatedComments);
+  };
+
   return (
     <View style={{ marginTop: 20 }}>
       {comments.map((comment) => (
-        <CommentCard key={comment.id} user={comment} comment={comment} />
+        <CommentCard
+          key={comment.id}
+          user={comment}
+          comment={comment}
+          onDelete={handleDeleteComment}
+        />
       ))}
       <TextInput
         value={newComment}

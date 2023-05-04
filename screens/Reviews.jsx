@@ -4,8 +4,6 @@ import { ProgressBar } from "react-native-paper";
 import CommentsList from "./CommentsList";
 import RateForm from "./RateForm";
 
-// currently not rendering anywhere, will need to render through the userProfile page when it's ready
-
 const Reviews = () => {
   return (
     <View>

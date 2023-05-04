@@ -1,31 +1,30 @@
-import { Text, View, Image, TouchableOpacity } from "react-native";
-import React from "react";
+import { View, Image } from 'react-native';
+import { Button } from 'react-native-paper';
+import React, { useState } from 'react';
+import LoginSignUp from './LoginSignUp';
 
 function Landing() {
-  return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+  const [login, setLogin] = useState(false);
+
+  return !login ? (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Image
-        source={require("../assets/Swapiday-Big-Logo.png")}
+        source={require('../assets/Swapiday-Big-Logo.png')}
         style={{ width: 300, height: 300 }}
         resizeMode="contain"
       />
       <View style={{ marginTop: 20 }}>
-        <TouchableOpacity
-          style={{
-            backgroundColor: "#7bd060",
-            padding: 10,
-            borderRadius: 5,
-            width: 100,
-          }}
+        <Button
+          mode="contained"
+          buttonColor="#39C67F"
+          onPress={() => setLogin(true)}
         >
-          <Text
-            style={{ color: "black", fontWeight: "bold", textAlign: "center" }}
-          >
-            Login
-          </Text>
-        </TouchableOpacity>
+          Log in
+        </Button>
       </View>
     </View>
+  ) : (
+    <LoginSignUp />
   );
 }
 

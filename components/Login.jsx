@@ -1,18 +1,25 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { View, Text } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
-import { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../config/firebase';
+import { useAuth } from '../contexts/AuthContext';
+import { LoginContext } from '../contexts/LoggedInContext';
 
 function Login() {
+  const [isLoggedIn, setIsLoggedIn] = useContext(LoginContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  const { currentUser, setCurrentUser } = useAuth();
   const handleLogin = () => {
     if (email !== '' && password !== '') {
       signInWithEmailAndPassword(auth, email, password)
-        .then(() => alert('Login success'))
+        .then(() => {
+          alert('Login success');
+          setCurrentUser(email);
+          setIsLoggedIn(true);
+        })
+
         .catch((err) => alert(`Login err: ${err}`));
     } else if (email === '' || password === '') {
       alert('Please fill out all fields');
@@ -43,11 +50,12 @@ function Login() {
         value={password}
         onChangeText={(password) => setPassword(password)}
       />
-      <Text>{'\n'}</Text>
+
       <Button onPress={handleLogin} buttonColor="#39C67F" mode="contained">
         {' '}
         Log In!{' '}
       </Button>
+      <Text>{'\n'}</Text>
     </View>
   );
 }

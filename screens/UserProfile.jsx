@@ -1,59 +1,76 @@
-import { Text, View, Image } from "react-native";
-import React from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Button } from "react-native-paper";
+import { Text, View, Image } from 'react-native';
+import React, { useContext } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Button } from 'react-native-paper';
+import { useAuth } from '../contexts/AuthContext';
+import { LoginContext } from '../contexts/LoggedInContext';
 
 function UserProfile() {
+  const { currentUser, setCurrentUser } = useAuth();
+  const [isLoggedIn, setIsLoggedIn] = useContext(LoginContext);
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View
         style={{
           flex: 1,
-          justifyContent: "space-between",
-          alignItems: "center",
+          justifyContent: 'space-between',
+          alignItems: 'center',
         }}
       >
+        <View>
+          <Text>{currentUser.uid}</Text>
+          <Button
+            modeValue="contained"
+            title="Logout"
+            onPress={() => {
+              setCurrentUser('');
+              setIsLoggedIn(false);
+            }}
+          >
+            Log out
+          </Button>
+        </View>
         <View
           style={{
-            width: "90%",
-            flexDirection: "row",
-            justifyContent: "flex-end",
-            alignItems: "center",
+            width: '90%',
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
           }}
         >
           <Button
             style={{
               marginRight: 70,
-              width: "40%",
+              width: '40%',
             }}
             mode="contained"
             buttonColor="#39C67F"
-            onPress={() => console.log("Pressed")}
+            onPress={() => console.log('Pressed')}
           >
             List My House
           </Button>
           <Button
             style={{
-              width: "40%",
+              width: '40%',
             }}
             mode="contained"
             buttonColor="#39C67F"
-            onPress={() => console.log("Pressed")}
+            onPress={() => console.log('Pressed')}
           >
             Edit Profile
           </Button>
         </View>
         <View
           style={{
-            width: "100%",
-            flexDirection: "row",
-            justifyContent: "space-around",
-            alignItems: "center",
+            width: '100%',
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            alignItems: 'center',
           }}
         >
-          <View style={{ textAlign: "center" }}>
+          <View style={{ textAlign: 'center' }}>
             <Image
-              source={require("../imagesTemp/avatar.png")}
+              source={require('../imagesTemp/avatar.png')}
               style={{
                 width: 100,
                 height: 100,
@@ -61,14 +78,14 @@ function UserProfile() {
               }}
             />
           </View>
-          <View style={{ alignItems: "center" }}>
+          <View style={{ alignItems: 'center' }}>
             <Text>Name</Text>
             <Text>Location</Text>
             <Text>Rating</Text>
             <Button
               mode="contained"
               buttonColor="#39C67F"
-              onPress={() => console.log("Pressed")}
+              onPress={() => console.log('Pressed')}
             >
               Contact Me
             </Button>
@@ -76,9 +93,9 @@ function UserProfile() {
         </View>
         <View
           style={{
-            width: "90%",
+            width: '90%',
             height: 100,
-            borderWidth: "2",
+            borderWidth: '2',
             borderRadius: 10,
           }}
         >
@@ -87,7 +104,7 @@ function UserProfile() {
         <View>
           <Text>House Pictures</Text>
           <Image
-            source={require("../imagesTemp/house.jpg")}
+            source={require('../imagesTemp/house.jpg')}
             style={{
               width: 370,
               height: 200,
@@ -96,9 +113,9 @@ function UserProfile() {
         </View>
         <View
           style={{
-            width: "90%",
+            width: '90%',
             height: 100,
-            borderWidth: "2",
+            borderWidth: '2',
             borderRadius: 10,
           }}
         >

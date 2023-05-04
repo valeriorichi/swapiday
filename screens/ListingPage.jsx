@@ -23,6 +23,7 @@ import { Marker } from "react-native-maps";
 import Swiper from "react-native-swiper";
 import GOOGLE_API_KEY from "../google_api_key";
 import testedUser from "../temp";
+import ErrorPage from "./ErrorPage";
 
 const chatButton = require("../assets/chatButton.png");
 const wishlistButton = require("../assets/wishlistButton.png");
@@ -41,7 +42,9 @@ function ListingPage() {
     longitudeDelta: 0.0421,
   });
   const [markerPosition, setMarkerPosition] = useState(mapPosition);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [toWishlist, setToWishlist] = useState(false);
+  const [isReserved, setIsReserved] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     Geocoding.from(testedUser.houseLocation)
@@ -57,7 +60,8 @@ function ListingPage() {
         setMapPosition(newPosition);
       })
       .catch((error) => {
-        console.log(error);
+        setError(true);
+        setErrors(error.response.data);
       });
   }, []);
 
@@ -70,10 +74,10 @@ function ListingPage() {
     const url = `https://www.google.com/maps/search/?api=1&query=${markerPosition.latitude},${markerPosition.longitude}`;
     Linking.openURL(url);
   };
-
   const addToWishlist = () => {
     // For now, display an alert message
-    alert("Redirecting to WishList");
+    alert("Added to WishList");
+    setToWishlist(true);
     //navigation.navigate('Wish list');
   };
 
@@ -98,9 +102,10 @@ function ListingPage() {
   const goToReservationPage = () => {
     // For now, display an alert message
     alert("Redirecting to Reservation Page");
+    setIsReserved(true);
     //navigation.navigate('Comment');
   };
-
+  if (error) return <ErrorPage message={error} />;
   return (
     <ScrollView>
       <LogoHeader style={styles.logoHeader} />
@@ -118,7 +123,11 @@ function ListingPage() {
         </Swiper>
       </View>
       <View style={styles.iconsContainer}>
-        <TouchableOpacity style={styles.icons} onPress={addToWishlist}>
+        <TouchableOpacity
+          style={[styles.icons, { opacity: toWishlist ? 0.2 : 1 }]}
+          disabled={toWishlist}
+          onPress={addToWishlist}
+        >
           <Image
             source={require("../assets/../assets/wishlistButton.png")}
             style={styles.icons}
@@ -160,7 +169,8 @@ function ListingPage() {
         </View>
       </View>
       <TouchableOpacity
-        style={styles.reserveButton}
+        style={[styles.reserveButton, { opacity: isReserved ? 0.2 : 1 }]}
+        disabled={isReserved}
         onPress={goToReservationPage}
       >
         <Text style={styles.reserveButtonText}>Reserve</Text>
@@ -201,7 +211,12 @@ function ListingPage() {
         </View>
       </TouchableOpacity>
       <TouchableOpacity
-        style={[styles.reserveButton, { marginBottom: 100 }]}
+        style={[
+          styles.reserveButton,
+          { marginBottom: 100 },
+          { opacity: isReserved ? 0.2 : 1 },
+        ]}
+        disabled={isReserved}
         onPress={goToReservationPage}
       >
         <Text style={styles.reserveButtonText}>Reserve</Text>

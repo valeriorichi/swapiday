@@ -19,6 +19,9 @@ import Reviews from './screens/Reviews';
 import DebugAccount from './screens/DebugAccount';
 import Search from './screens/Search';
 import Chat from './screens/Chat';
+import RateForm from "./screens/RateForm";
+import ErrorPage from "./screens/ErrorPage.jsx";
+
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -35,6 +38,8 @@ const MainNavigator = () => {
       <Tab.Screen name="UpdateListing" component={UpdateListing} />
       <Tab.Screen name="Reviews" component={Reviews} />
       <Tab.Screen name="Debug" component={DebugAccount} />
+      <Tab.Screen name="RateForm" component={RateForm} />
+      <Tab.Screen name="Errors" component={ErrorPage} />
     </Tab.Navigator>
   );
 };
@@ -70,7 +75,7 @@ const theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: 'tomato',
-    secondary: 'yellow',
+    primary: "tomato",
+    secondary: "yellow",
   },
 };

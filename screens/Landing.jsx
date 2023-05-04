@@ -1,13 +1,15 @@
-import { Text, View, Image } from "react-native";
-import { Button } from "react-native-paper";
-import React from "react";
-import { useAuth } from "../contexts/AuthContext";
+import { View, Image } from 'react-native';
+import { Button } from 'react-native-paper';
+import React, { useState } from 'react';
+import LoginSignUp from './LoginSignUp';
 
-function Landing({ navigation }) {
-  return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+function Landing() {
+  const [login, setLogin] = useState(false);
+
+  return !login ? (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Image
-        source={require("../assets/Swapiday-Big-Logo.png")}
+        source={require('../assets/Swapiday-Big-Logo.png')}
         style={{ width: 300, height: 300 }}
         resizeMode="contain"
       />
@@ -15,12 +17,14 @@ function Landing({ navigation }) {
         <Button
           mode="contained"
           buttonColor="#39C67F"
-          onPress={() => navigation.navigate("LoginSignUp")}
+          onPress={() => setLogin(true)}
         >
           Log in
         </Button>
       </View>
     </View>
+  ) : (
+    <LoginSignUp />
   );
 }
 

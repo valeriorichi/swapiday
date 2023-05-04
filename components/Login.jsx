@@ -1,38 +1,36 @@
-import React from "react";
-import { View, Text } from "react-native";
-import { TextInput, Button } from "react-native-paper";
-import { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../config/firebase";
-import { useAuth } from "../contexts/AuthContext";
-import { useLoggedIn } from "../contexts/LoggedInContext";
+import React, { useContext, useState } from 'react';
+import { View, Text } from 'react-native';
+import { TextInput, Button } from 'react-native-paper';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../config/firebase';
+import { useAuth } from '../contexts/AuthContext';
+import { LoginContext } from '../contexts/LoggedInContext';
 
-function Login({ navigate }) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+function Login() {
+  const [isLoggedIn, setIsLoggedIn] = useContext(LoginContext);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const { currentUser, setCurrentUser } = useAuth();
-  const { isLoggedIn, setIsLoggedIn } = useLoggedIn();
-
   const handleLogin = () => {
-    if (email !== "" && password !== "") {
+    if (email !== '' && password !== '') {
       signInWithEmailAndPassword(auth, email, password)
         .then(() => {
-          alert("Login success");
+          alert('Login success');
           setCurrentUser(email);
           setIsLoggedIn(true);
         })
         .then(() => {
-          console.log(currentUser, "user");
+          console.log(currentUser, 'user');
         })
         .catch((err) => alert(`Login err: ${err}`));
-    } else if (email === "" || password === "") {
-      alert("Please fill out all fields");
+    } else if (email === '' || password === '') {
+      alert('Please fill out all fields');
     }
   };
 
   return (
     <View>
-      <Text>{"\n"} </Text>
+      <Text>{'\n'} </Text>
       <TextInput
         label="Email"
         value={email}
@@ -43,7 +41,7 @@ function Login({ navigate }) {
         onChangeText={(email) => setEmail(email)}
         width={300}
       />
-      <Text>{"\n"}</Text>
+      <Text>{'\n'}</Text>
       <TextInput
         label="Password"
         autoCapitalize="none"
@@ -54,11 +52,12 @@ function Login({ navigate }) {
         value={password}
         onChangeText={(password) => setPassword(password)}
       />
-      <Text>{"\n"}</Text>
+
       <Button onPress={handleLogin} buttonColor="#39C67F" mode="contained">
-        {" "}
-        Log In!{" "}
+        {' '}
+        Log In!{' '}
       </Button>
+      <Text>{'\n'}</Text>
     </View>
   );
 }

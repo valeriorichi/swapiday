@@ -1,27 +1,24 @@
-import { StyleSheet } from "react-native";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "./config/firebase";
-import React, { useEffect } from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Landing from "./screens/Landing";
-import HomeList from "./screens/HomeList";
-import AddHome from "./screens/AddHome";
-import ListingPage from "./screens/ListingPage";
-import UpdateListing from "./screens/UpdateListing";
-import LoginSignUp from "./screens/LoginSignUp";
-import UserProfile from "./screens/UserProfile";
-import Reviews from "./screens/Reviews";
-import { AuthProvider, useAuth } from "./contexts/AuthContext";
-import DebugAccount from "./screens/DebugAccount";
+import React, { useContext } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { AuthProvider } from './contexts/AuthContext';
 import {
   Provider as PaperProvider,
   MD3LightTheme as DefaultTheme,
-} from "react-native-paper";
-import Search from "./screens/Search";
-import Chat from "./screens/Chat";
-import { createStackNavigator } from "@react-navigation/stack";
-import { useLoggedIn, LoggedInProvider } from "./contexts/LoggedInContext";
+} from 'react-native-paper';
+import { createStackNavigator } from '@react-navigation/stack';
+import { LoginContext, LoginContextProvider } from './contexts/LoggedInContext';
+import Landing from './screens/Landing';
+import HomeList from './screens/HomeList';
+import AddHome from './screens/AddHome';
+import ListingPage from './screens/ListingPage';
+import UpdateListing from './screens/UpdateListing';
+import LoginSignUp from './screens/LoginSignUp';
+import UserProfile from './screens/UserProfile';
+import Reviews from './screens/Reviews';
+import DebugAccount from './screens/DebugAccount';
+import Search from './screens/Search';
+import Chat from './screens/Chat';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -33,8 +30,7 @@ const MainNavigator = () => {
       <Tab.Screen name="Homes" component={HomeList} />
       <Tab.Screen name="List a home" component={AddHome} />
       <Tab.Screen name="Listing Page" component={ListingPage} />
-      <Tab.Screen name="Login/Sign up" component={LoginSignUp} />
-      <Tab.Screen name="My Profile" component={UserProfile} />
+      <Tab.Screen name="UserProfile" component={UserProfile} />
       <Tab.Screen name="Chat" component={Chat} />
       <Tab.Screen name="UpdateListing" component={UpdateListing} />
       <Tab.Screen name="Reviews" component={Reviews} />
@@ -43,27 +39,29 @@ const MainNavigator = () => {
   );
 };
 
-export default function App() {
-  const { currentUser, setCurrentUser } = useAuth();
-  const { isLoggedIn, setIsLoggedIn } = useLoggedIn();
+const AuthStackScreen = () => (
+  <Stack.Navigator>
+    <Stack.Screen name="Landing" component={Landing} />
+    <Stack.Screen name="Login" component={LoginSignUp} />
+  </Stack.Navigator>
+);
 
+const Navigation = () => {
+  const [isLoggedIn, setIsLoggedIn] = useContext(LoginContext);
+  return (
+    <NavigationContainer>
+      {isLoggedIn ? <MainNavigator /> : <AuthStackScreen />}
+    </NavigationContainer>
+  );
+};
+
+export default function App() {
   return (
     <PaperProvider theme={theme}>
       <AuthProvider>
-        <NavigationContainer>
-          <LoggedInProvider>
-            {!isLoggedIn ? (
-              <>
-                <Stack.Navigator>
-                  <Stack.Screen name="Landing" component={Landing} />
-                  <Stack.Screen name="LoginSignUp" component={LoginSignUp} />
-                </Stack.Navigator>
-              </>
-            ) : (
-              <MainNavigator />
-            )}
-          </LoggedInProvider>
-        </NavigationContainer>
+        <LoginContextProvider>
+          <Navigation />
+        </LoginContextProvider>
       </AuthProvider>
     </PaperProvider>
   );
@@ -72,16 +70,7 @@ const theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: "tomato",
-    secondary: "yellow",
+    primary: 'tomato',
+    secondary: 'yellow',
   },
 };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#fff',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-// });

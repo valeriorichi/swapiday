@@ -1,3 +1,21 @@
+import { StyleSheet } from "react-native";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "./config/firebase";
+import * as React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import Landing from "./screens/Landing";
+import HomeList from "./screens/HomeList";
+import AddHome from "./screens/AddHome";
+import ListingPage from "./screens/ListingPage";
+import UpdateListing from "./screens/UpdateListing";
+import LoginSignUp from "./screens/LoginSignUp";
+import UserProfile from "./screens/UserProfile";
+import RateForm from "./screens/RateForm";
+import Reviews from "./screens/Reviews";
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
+import DebugAccount from "./screens/DebugAccount";
+
 import { StyleSheet } from 'react-native';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from './config/firebase';
@@ -14,6 +32,7 @@ import UserProfile from './screens/UserProfile';
 import Reviews from './screens/Reviews';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import DebugAccount from './screens/DebugAccount';
+
 import {
   Provider as PaperProvider,
   MD3LightTheme as DefaultTheme,
@@ -42,6 +61,7 @@ export default function App() {
             <Tab.Screen name="Reviews" component={Reviews} />
             <Tab.Screen name="Errors" component={ErrorPage} />
             <Tab.Screen name="Debug" component={DebugAccount} />
+            <Tab.Screen name="RateForm" component={RateForm} />
           </Tab.Navigator>
         </NavigationContainer>
       </AuthProvider>

@@ -1,13 +1,20 @@
-const reviewsRating = require("../tested_data/reviewsData");
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, Button } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 const RateForm = () => {
+  // const reviewsRating = { cleanliness: [], communication: [], location: [] };
+
   const [ratings, setRatings] = useState({
     cleanliness: 0,
     location: 0,
     communication: 0,
+  });
+
+  const [reviewsRating, setReviewsRating] = useState({
+    cleanliness: [],
+    location: [],
+    communication: [],
   });
 
   const handleRating = (category, rating) => {
@@ -18,11 +25,12 @@ const RateForm = () => {
   };
 
   const handleSubmit = () => {
-    Object.entries(ratings).forEach(([category, rating]) => {
-      reviewsRating
-        .find((obj) => obj.hasOwnProperty(category))
-        [category].push(rating);
-    });
+    const newReviewsRating = {};
+    for (const [category, rating] of Object.entries(ratings)) {
+      newReviewsRating[category] = [...reviewsRating[category], rating];
+    }
+    setReviewsRating(newReviewsRating);
+    console.log(newReviewsRating);
   };
 
   const handleClear = () => {

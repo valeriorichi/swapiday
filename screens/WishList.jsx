@@ -19,8 +19,10 @@ function WishList() {
         console.log(doc.id, doc.data());
       });
     });
-    addDoc(todosRef, {
-      text: "our second message",
+    const todosRef1 = collection(database, "todos", "/nzmXGmzywrylR4P2e07k/");
+
+    addDoc(todosRef1, {
+      text: "our 5th message",
     })
       .then((docRef) => {
         console.log("Added new todo with ID: ", docRef.id);

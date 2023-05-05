@@ -1,27 +1,27 @@
-import React, { useContext } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { AuthProvider } from './contexts/AuthContext';
+import React, { useContext } from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { AuthProvider } from "./contexts/AuthContext";
 import {
   Provider as PaperProvider,
   MD3LightTheme as DefaultTheme,
-} from 'react-native-paper';
-import { createStackNavigator } from '@react-navigation/stack';
-import { LoginContext, LoginContextProvider } from './contexts/LoggedInContext';
-import Landing from './screens/Landing';
-import HomeList from './screens/HomeList';
-import AddHome from './screens/AddHome';
-import ListingPage from './screens/ListingPage';
-import UpdateListing from './screens/UpdateListing';
-import LoginSignUp from './screens/LoginSignUp';
-import UserProfile from './screens/UserProfile';
-import Reviews from './screens/Reviews';
-import DebugAccount from './screens/DebugAccount';
-import Search from './screens/Search';
-import Chat from './screens/Chat';
+} from "react-native-paper";
+import { createStackNavigator } from "@react-navigation/stack";
+import { LoginContext, LoginContextProvider } from "./contexts/LoggedInContext";
+import Landing from "./screens/Landing";
+import HomeList from "./screens/HomeList";
+import AddHome from "./screens/AddHome";
+import ListingPage from "./screens/ListingPage";
+import UpdateListing from "./screens/UpdateListing";
+import LoginSignUp from "./screens/LoginSignUp";
+import UserProfile from "./screens/UserProfile";
+import Reviews from "./screens/Reviews";
+import DebugAccount from "./screens/DebugAccount";
+import Search from "./screens/Search";
+import Chat from "./screens/Chat";
 import RateForm from "./screens/RateForm";
 import ErrorPage from "./screens/ErrorPage.jsx";
-
+import WishList from "./screens/WishList";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -37,6 +37,8 @@ const MainNavigator = () => {
       <Tab.Screen name="Chat" component={Chat} />
       <Tab.Screen name="UpdateListing" component={UpdateListing} />
       <Tab.Screen name="Reviews" component={Reviews} />
+      <Tab.Screen name="WishList" component={WishList} />
+
       <Tab.Screen name="Debug" component={DebugAccount} />
       <Tab.Screen name="RateForm" component={RateForm} />
       <Tab.Screen name="Errors" component={ErrorPage} />

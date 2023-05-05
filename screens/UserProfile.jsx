@@ -6,7 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { LoginContext } from '../contexts/LoggedInContext';
 import { database } from '../config/firebase';
 
-import { collection, doc, setDoc, getDoc } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 
 function UserProfile() {
   const { currentUser, setCurrentUser } = useAuth();
@@ -20,15 +20,17 @@ function UserProfile() {
     const results = docSnap.data();
     return results;
   }
+
   useEffect(() => {
     setIsLoading(true);
-    getUserProfile('zzzzzzzzzzzzzzzzzzzy')
+    getUserProfile(currentUser.uid)
       .then((data) => {
         setIsLoading(false);
         setUserProfile(data);
       })
       .catch((e) => console.log(e));
   }, []);
+
   if (isLoading) {
     return (
       <>
@@ -36,6 +38,7 @@ function UserProfile() {
       </>
     );
   }
+
   if (userProfile) {
     return (
       <SafeAreaView style={{ flex: 1 }}>
@@ -109,8 +112,8 @@ function UserProfile() {
             </View>
             <View style={{ alignItems: 'center' }}>
               <Text>{userProfile.firstName + ' ' + userProfile.lastName}</Text>
-              <Text>{userProfile.Location}</Text>
-              <Text>{userProfile.Rating + ' *'}</Text>
+              <Text>{userProfile.location}</Text>
+              <Text>{userProfile.rating + ' *'}</Text>
               <Button
                 mode="contained"
                 buttonColor="#39C67F"
@@ -128,7 +131,7 @@ function UserProfile() {
               borderRadius: 10,
             }}
           >
-            <Text>{userProfile.Bio}</Text>
+            <Text>{userProfile.bio}</Text>
           </View>
           <View>
             <Text>House Pictures</Text>

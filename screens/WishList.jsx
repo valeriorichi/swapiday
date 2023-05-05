@@ -19,6 +19,15 @@ function WishList() {
         console.log(doc.id, doc.data());
       });
     });
+    addDoc(todosRef, {
+      text: "our second message",
+    })
+      .then((docRef) => {
+        console.log("Added new todo with ID: ", docRef.id);
+      })
+      .catch((error) => {
+        console.error("Error adding new todo: ", error);
+      });
     return () => unsubscribe();
   }, []);
 

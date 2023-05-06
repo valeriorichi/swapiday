@@ -5,17 +5,17 @@ import { Button, ActivityIndicator } from 'react-native-paper';
 import { useAuth } from '../contexts/AuthContext';
 import { LoginContext } from '../contexts/LoggedInContext';
 import { database } from '../config/firebase';
-
 import { doc, getDoc } from 'firebase/firestore';
 import { getStorage, ref, getDownloadURL } from 'firebase/storage';
+import EditProfile from '../components/EditProfile';
 
 function UserProfile() {
-  // Create a reference with an initial file path and name
   const [profileImgUrl, setProfileImgUrl] = useState('');
   const { currentUser, setCurrentUser } = useAuth();
   const [isLoggedIn, setIsLoggedIn] = useContext(LoginContext);
   const [userProfile, setUserProfile] = useState();
   const [isLoading, setIsLoading] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
 
   async function getUserProfile(id) {
     const docRef = doc(database, 'userProfilesV2', id);
@@ -44,12 +44,17 @@ function UserProfile() {
       })
       .catch((e) => console.log(e));
   }, []);
+
   if (isLoading) {
     return (
       <>
         <ActivityIndicator />
       </>
     );
+  }
+
+  if (isEditing) {
+    return <EditProfile userProfile={userProfile} />;
   }
 
   if (userProfile) {
@@ -63,7 +68,7 @@ function UserProfile() {
           }}
         >
           <View>
-            <Text>{currentUser.uid}</Text>
+            <Text>Welcome back, {userProfile.firstName}</Text>
             <Button
               modeValue="contained"
               title="Logout"
@@ -100,7 +105,7 @@ function UserProfile() {
               }}
               mode="contained"
               buttonColor="#39C67F"
-              onPress={() => console.log('Pressed')}
+              onPress={() => setIsEditing(true)}
             >
               Edit Profile
             </Button>

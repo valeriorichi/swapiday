@@ -7,8 +7,11 @@ import { LoginContext } from '../contexts/LoggedInContext';
 import { database } from '../config/firebase';
 
 import { doc, getDoc } from 'firebase/firestore';
+import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 
 function UserProfile() {
+  // Create a reference with an initial file path and name
+  const [profileImgUrl, setProfileImgUrl] = useState('');
   const { currentUser, setCurrentUser } = useAuth();
   const [isLoggedIn, setIsLoggedIn] = useContext(LoginContext);
   const [userProfile, setUserProfile] = useState();
@@ -23,14 +26,24 @@ function UserProfile() {
 
   useEffect(() => {
     setIsLoading(true);
-    getUserProfile(currentUser.uid)
+    const storage = getStorage();
+    const reference = ref(
+      storage,
+      `users/${currentUser.uid}/userImages/userImage.jpg`
+    );
+    getDownloadURL(reference)
+      .then((url) => {
+        setProfileImgUrl(url);
+      })
+      .then(() => {
+        return getUserProfile(currentUser.uid);
+      })
       .then((data) => {
         setIsLoading(false);
         setUserProfile(data);
       })
       .catch((e) => console.log(e));
   }, []);
-
   if (isLoading) {
     return (
       <>
@@ -102,7 +115,7 @@ function UserProfile() {
           >
             <View style={{ textAlign: 'center' }}>
               <Image
-                source={require('../imagesTemp/avatar.png')}
+                source={{ uri: profileImgUrl }}
                 style={{
                   width: 100,
                   height: 100,
@@ -136,7 +149,9 @@ function UserProfile() {
           <View>
             <Text>House Pictures</Text>
             <Image
-              source={require('../imagesTemp/house.jpg')}
+              source={{
+                uri: `https://firebasestorage.googleapis.com/v0/b/swapiday.appspot.com/o/users%2F3EL4Y4UWgaeq3vrsCcQXkPuD3XW2%2FhouseImages%2Fdata1_0.jpg?alt=media&token=425e6c81-eadf-408f-9c73-7888958e6a5e`,
+              }}
               style={{
                 width: 370,
                 height: 200,

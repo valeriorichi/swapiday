@@ -1,24 +1,27 @@
-import { Text, View, Image } from 'react-native';
-import React, { useContext, useEffect, useState } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Button, ActivityIndicator } from 'react-native-paper';
-import { useAuth } from '../contexts/AuthContext';
-import { LoginContext } from '../contexts/LoggedInContext';
-import { database } from '../config/firebase';
-import { doc, getDoc } from 'firebase/firestore';
-import { getStorage, ref, getDownloadURL } from 'firebase/storage';
-import EditProfile from '../components/EditProfile';
+import { Text, View, Image } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Button, ActivityIndicator } from "react-native-paper";
+import { useAuth } from "../contexts/AuthContext";
+import { LoginContext } from "../contexts/LoggedInContext";
+import { database } from "../config/firebase";
+import { doc, getDoc } from "firebase/firestore";
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import EditProfile from "../components/EditProfile";
+import { useRoute } from "@react-navigation/native"; // added by Val
 
 function UserProfile() {
-  const [profileImgUrl, setProfileImgUrl] = useState('');
+  const [profileImgUrl, setProfileImgUrl] = useState("");
   const { currentUser, setCurrentUser } = useAuth();
   const [isLoggedIn, setIsLoggedIn] = useContext(LoginContext);
   const [userProfile, setUserProfile] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
+  const route = useRoute(); //added by Val
+  const { searchedUserUid } = route.params; //added by Val
 
   async function getUserProfile(id) {
-    const docRef = doc(database, 'userProfilesV2', id);
+    const docRef = doc(database, "userProfilesV2", id);
     const docSnap = await getDoc(docRef);
     const results = docSnap.data();
     return results;
@@ -63,8 +66,8 @@ function UserProfile() {
         <View
           style={{
             flex: 1,
-            justifyContent: 'space-between',
-            alignItems: 'center',
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
           <View>
@@ -73,7 +76,7 @@ function UserProfile() {
               modeValue="contained"
               title="Logout"
               onPress={() => {
-                setCurrentUser('');
+                setCurrentUser("");
                 setIsLoggedIn(false);
               }}
             >
@@ -82,26 +85,26 @@ function UserProfile() {
           </View>
           <View
             style={{
-              width: '90%',
-              flexDirection: 'row',
-              justifyContent: 'flex-end',
-              alignItems: 'center',
+              width: "90%",
+              flexDirection: "row",
+              justifyContent: "flex-end",
+              alignItems: "center",
             }}
           >
             <Button
               style={{
                 marginRight: 70,
-                width: '40%',
+                width: "40%",
               }}
               mode="contained"
               buttonColor="#39C67F"
-              onPress={() => console.log('Pressed')}
+              onPress={() => console.log("Pressed")}
             >
               List My House
             </Button>
             <Button
               style={{
-                width: '40%',
+                width: "40%",
               }}
               mode="contained"
               buttonColor="#39C67F"
@@ -112,13 +115,13 @@ function UserProfile() {
           </View>
           <View
             style={{
-              width: '100%',
-              flexDirection: 'row',
-              justifyContent: 'space-around',
-              alignItems: 'center',
+              width: "100%",
+              flexDirection: "row",
+              justifyContent: "space-around",
+              alignItems: "center",
             }}
           >
-            <View style={{ textAlign: 'center' }}>
+            <View style={{ textAlign: "center" }}>
               <Image
                 source={{ uri: profileImgUrl }}
                 style={{
@@ -128,14 +131,14 @@ function UserProfile() {
                 }}
               />
             </View>
-            <View style={{ alignItems: 'center' }}>
-              <Text>{userProfile.firstName + ' ' + userProfile.lastName}</Text>
+            <View style={{ alignItems: "center" }}>
+              <Text>{userProfile.firstName + " " + userProfile.lastName}</Text>
               <Text>{userProfile.location}</Text>
-              <Text>{userProfile.rating + ' *'}</Text>
+              <Text>{userProfile.rating + " *"}</Text>
               <Button
                 mode="contained"
                 buttonColor="#39C67F"
-                onPress={() => console.log('Pressed')}
+                onPress={() => console.log("Pressed")}
               >
                 Contact Me
               </Button>
@@ -143,9 +146,9 @@ function UserProfile() {
           </View>
           <View
             style={{
-              width: '90%',
+              width: "90%",
               height: 100,
-              borderWidth: '2',
+              borderWidth: "2",
               borderRadius: 10,
             }}
           >
@@ -165,9 +168,9 @@ function UserProfile() {
           </View>
           <View
             style={{
-              width: '90%',
+              width: "90%",
               height: 100,
-              borderWidth: '2',
+              borderWidth: "2",
               borderRadius: 10,
             }}
           >

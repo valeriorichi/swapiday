@@ -3,8 +3,11 @@ import { View, Text, Button } from "react-native";
 import { ProgressBar } from "react-native-paper";
 import CommentsList from "./CommentsList";
 import RateForm from "./RateForm";
+import { useRoute } from "@react-navigation/native"; // added by Val
 
 const Reviews = () => {
+  const route = useRoute(); //added by Val
+  const { searchedUserUid } = route.params; //added by Val
   return (
     <View>
       <Text

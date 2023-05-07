@@ -13,14 +13,24 @@ import {
   TouchableOpacity,
   Linking,
 } from "react-native";
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import LogoHeader from "./LogoHeader";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
 import MapView from "react-native-maps";
 import Geocoding from "react-native-geocoding";
-import { useState, useEffect } from "react";
 import { Marker } from "react-native-maps";
 import Swiper from "react-native-swiper";
+import { useAuth } from "../contexts/AuthContext";
+import { database } from "../config/firebase";
+import {
+  doc,
+  getDoc,
+  updateDoc,
+  FieldValue,
+  arrayUnion,
+} from "firebase/firestore";
+import { getStorage, ref, getDownloadURL, listAll } from "firebase/storage";
 import GOOGLE_API_KEY from "../google_api_key";
 import testedUser from "../temp";
 import ErrorPage from "./ErrorPage";
@@ -30,10 +40,11 @@ const wishlistButton = require("../assets/wishlistButton.png");
 const yellowStar = require("../assets/yellowStar.png");
 
 Geocoding.init(GOOGLE_API_KEY);
+// remove "= DNuWaXM85COmHYtIXBnys2vRQxu2" from below
+// change userProfilesV2 for proper name which used in Firebase
+// import all pages where searchedUserUid comes from
 
-const images = testedUser.houseImage;
-
-function ListingPage() {
+function ListingPage({ searchedUserUid = "DNuWaXM85COmHYtIXBnys2vRQxu2" }) {
   const [address, setAddress] = useState("");
   const [mapPosition, setMapPosition] = useState({
     latitude: 51.507359,
@@ -45,28 +56,93 @@ function ListingPage() {
   const [toWishlist, setToWishlist] = useState(false);
   const [isReserved, setIsReserved] = useState(false);
   const [error, setError] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(true);
+  const [images, setImages] = useState([]);
+  const { currentUser, setCurrentUser } = useAuth();
+  const [location, setLocation] = useState("");
+  const [houseHeaderInfo, setHouseHeaderInfo] = useState("");
+  const [houseInfo, setHouseInfo] = useState("");
+  const navigation = useNavigation();
+  const [reviewsField, setReviewsField] = useState("");
+  const [commentsField, setCommentsField] = useState("");
+  const [availableDates, setAvailableDates] = useState([]);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("[]");
+  const [userImage, setUserImage] = useState("");
   useEffect(() => {
-    Geocoding.from(testedUser.houseLocation)
-      .then((response) => {
-        const location = response.results[0].geometry.location;
-        const newPosition = {
-          latitude: location.lat,
-          longitude: location.lng,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        };
-        setMarkerPosition(newPosition);
-        setMapPosition(newPosition);
+    setIsLoading(true);
+    const storage = getStorage();
+    const listReference = ref(storage, `users/${searchedUserUid}/houseImages`);
+    listAll(listReference)
+      .then((res) => {
+        const images = [];
+        res.items.forEach((itemRef) => {
+          getDownloadURL(itemRef).then((url) => {
+            images.push({ url: url, name: itemRef.name });
+            if (images.length === res.items.length) {
+              setImages(images);
+              setIsLoading(false);
+            }
+          });
+        });
       })
       .catch((error) => {
-        setError(true);
-        setErrors(error.response.data);
+        console.error(error);
+        setIsLoading(false);
+      });
+    const userImageRef = ref(
+      storage,
+      `users/${searchedUserUid}/userImages/userImage.jpg`
+    );
+    getDownloadURL(userImageRef)
+      .then((url) => {
+        setUserImage(url);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+    const docRef = doc(database, `userProfilesV2/${searchedUserUid}`);
+    getDoc(docRef)
+      .then((doc) => {
+        setLocation(doc.data().location);
+        setHouseHeaderInfo(doc.data().houseHeaderInfo);
+        const reviewsArray = doc.data().reviews;
+        const sum = reviewsArray.reduce((acc, review) => acc + review, 0);
+        const averageReview = (sum / reviewsArray.length).toFixed(1);
+        setReviewsField(averageReview);
+        setCommentsField(doc.data().comments.length);
+        setHouseInfo(doc.data().houseInfo);
+        setAvailableDates(doc.data().availableDates);
+        setFirstName(doc.data().firstName);
+        setLastName(doc.data().lastName);
+      })
+      .catch((error) => {
+        console.error(error);
       });
   }, []);
+  useEffect(() => {
+    if (location) {
+      Geocoding.from(location)
+        .then((response) => {
+          const location = response.results[0].geometry.location;
+          const newPosition = {
+            latitude: location.lat,
+            longitude: location.lng,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          };
+          setMarkerPosition(newPosition);
+          setMapPosition(newPosition);
+        })
+        .catch((error) => {
+          setError(true);
+          setErrors(error.response.data);
+        });
+    }
+  }, [location]);
 
   const onRegionChangeComplete = (newPosition) => {
-    // Only update the map's position, not the marker's position
     setMapPosition(newPosition);
   };
 
@@ -75,41 +151,56 @@ function ListingPage() {
     Linking.openURL(url);
   };
   const addToWishlist = () => {
-    // For now, display an alert message
-    alert("Added to WishList");
-    setToWishlist(true);
-    //navigation.navigate('Wish list');
+    const docRef = doc(database, `userProfilesV2/${searchedUserUid}`);
+    updateDoc(docRef, {
+      wishList: arrayUnion(searchedUserUid),
+    })
+      .then(() => {
+        alert("Added to WishList");
+        setToWishlist(true);
+      })
+      .catch((error) => {
+        console.error("Error updating document: ", error);
+      });
   };
 
   const goToChat = () => {
-    // For now, display an alert message
     alert("Redirecting to ChatPage");
-    //navigation.navigate('Chat');
+    navigation.navigate("Chat", { searchedUserUid: searchedUserUid });
   };
 
-  const goToCommentPage = () => {
-    // For now, display an alert message
-    alert("Redirecting to Comment Page");
-    //navigation.navigate('Comment');
+  const goToReviewsPage = () => {
+    alert("Redirecting to Reviews andComment Page");
+    navigation.navigate("Reviews", { searchedUserUid: searchedUserUid });
   };
 
   const goToUserProfile = () => {
-    // For now, display an alert message
     alert("Redirecting to User Profile");
-    //navigation.navigate('Comment');
+    navigation.navigate("Reviews", { searchedUserUid: searchedUserUid });
   };
 
-  const goToReservationPage = () => {
-    // For now, display an alert message
-    alert("Redirecting to Reservation Page");
-    setIsReserved(true);
-    //navigation.navigate('Comment');
+  const addBooking = () => {
+    const docRef = doc(database, `userProfilesV2/${searchedUserUid}`);
+    const docRef1 = doc(database, `userProfilesV2/${currentUser.uid}`);
+
+    Promise.all([
+      updateDoc(docRef, { reservedMe: arrayUnion(searchedUserUid) }),
+      updateDoc(docRef1, { myBooking: arrayUnion(searchedUserUid) }),
+    ])
+      .then(() => {
+        setIsReserved(true);
+        alert("Booked");
+      })
+      .catch((error) => {
+        console.error("Error updating document: ", error);
+      });
   };
+
   if (error) return <ErrorPage message={error} />;
   return (
     <ScrollView>
       <LogoHeader style={styles.logoHeader} />
-      <Text style={styles.header}>{testedUser.houseHeaderInfo}</Text>
+      <Text style={styles.header}>{houseHeaderInfo}</Text>
       <View style={styles.mapAndImageContainer}>
         <Swiper
           style={styles.swiper}
@@ -118,7 +209,11 @@ function ListingPage() {
           showsPagination={false}
         >
           {images.map((image, index) => (
-            <Image key={index} source={image} style={styles.image} />
+            <Image
+              key={index}
+              source={{ uri: image.url }}
+              style={styles.image}
+            />
           ))}
         </Swiper>
       </View>
@@ -142,19 +237,19 @@ function ListingPage() {
           <Text style={styles.iconText}>Contact{"\n"}host</Text>
         </TouchableOpacity>
         <View style={styles.commentContainer}>
-          <TouchableOpacity style={styles.icons} onPress={goToCommentPage}>
+          <TouchableOpacity style={styles.icons} onPress={goToReviewsPage}>
             <View style={styles.ratingContainer}>
               <Image
                 source={require("../assets/yellowStar.png")}
                 style={[styles.icons, { marginLeft: -12 }]}
               />
               <Text style={[styles.iconText, { fontSize: 24 }]}>
-                {testedUser.comments.rating}
+                {reviewsField}
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Text style={[styles.iconText, { fontSize: 24 }]}>
-                {testedUser.comments.review}
+                {commentsField}
               </Text>
               <Text
                 style={[
@@ -171,16 +266,16 @@ function ListingPage() {
       <TouchableOpacity
         style={[styles.reserveButton, { opacity: isReserved ? 0.2 : 1 }]}
         disabled={isReserved}
-        onPress={goToReservationPage}
+        onPress={addBooking}
       >
-        <Text style={styles.reserveButtonText}>Reserve</Text>
+        <Text style={styles.reserveButtonText}>Book now</Text>
       </TouchableOpacity>
       <Text style={styles.header}>About accomodation:</Text>
       <View style={styles.mapAndImageContainer}>
-        <Text>{testedUser.houseInfo}</Text>
+        <Text>{houseInfo}</Text>
       </View>
       <Text style={styles.header}>Location</Text>
-      <Text style={styles.userLocation}>{testedUser.houseLocation}</Text>
+      <Text style={styles.userLocation}>{location}</Text>
       <View style={styles.mapAndImageContainer}>
         <MapView
           style={styles.map}
@@ -195,19 +290,18 @@ function ListingPage() {
       </View>
       <Text style={styles.header}>Available dates</Text>
       <View style={styles.availableDatesContainer}>
-        {testedUser.available_dates.map((date, index) => (
-          <Text style={styles.datesText}>
-            {date.from} - {date.to}
+        {availableDates.map((date, index) => (
+          <Text key={index} style={styles.datesText}>
+            {date.from.toDate().toLocaleDateString()} -{" "}
+            {date.to.toDate().toLocaleDateString()}
           </Text>
         ))}
       </View>
       <Text style={styles.header}>About host</Text>
       <TouchableOpacity onPress={goToUserProfile}>
-        <Text style={styles.userName}>
-          {testedUser.name + " " + testedUser.surname}
-        </Text>
+        <Text style={styles.userName}>{firstName + " " + lastName}</Text>
         <View style={styles.mapAndImageContainer}>
-          <Image source={testedUser.userImage[0]} style={styles.userImage} />
+          <Image source={{ uri: userImage }} style={styles.userImage} />
         </View>
       </TouchableOpacity>
       <TouchableOpacity
@@ -217,9 +311,9 @@ function ListingPage() {
           { opacity: isReserved ? 0.2 : 1 },
         ]}
         disabled={isReserved}
-        onPress={goToReservationPage}
+        onPress={addBooking}
       >
-        <Text style={styles.reserveButtonText}>Reserve</Text>
+        <Text style={styles.reserveButtonText}>Book now</Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -392,7 +486,7 @@ const styles = StyleSheet.create({
   reserveButton: {
     width: 100,
     height: 50,
-    backgroundColor: "lightcoral",
+    backgroundColor: "#DAEBDD",
     borderRadius: 12.5,
     justifyContent: "center",
     alignItems: "center",

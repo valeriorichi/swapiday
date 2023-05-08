@@ -1,8 +1,10 @@
+
 import React, {
   useState,
   useEffect,
   useLayoutEffect,
   useCallback,
+  useContext
 } from "react";
 import { TouchableOpacity, Text } from "react-native";
 import { GiftedChat } from "react-native-gifted-chat";
@@ -12,11 +14,21 @@ import {
   orderBy,
   query,
   onSnapshot,
+  setDoc,
+  doc,
+  getDoc,
 } from "firebase/firestore";
-import { signOut } from "firebase/auth";
 import avatar from "../imagesTemp/avatar.png";
-import { useRoute } from "@react-navigation/native"; // added by Val
 import { auth, database } from "../config/firebase";
+import { ChatContext } from "../contexts/ChatContext";
+import { useRoute } from "@react-navigation/native"; // added by Val
+
+function Chat({ navigation }) {
+  const [messages, setMessages] = useState([]);
+
+  //This will be set using profile page.
+  const [recipient, setRecipient] = useState();
+
 function Chat({ navigation }) {
   const [messages, setMessages] = useState([]);
   const route = useRoute(); //added by Val
@@ -25,25 +37,23 @@ function Chat({ navigation }) {
     signOut(auth).catch((error) => console.log("Error logging out: ", error));
   };
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <TouchableOpacity
-          style={{
-            marginRight: 10,
-          }}
-          onPress={onSignOut}
-        >
-          <Text>Logout</Text>
-        </TouchableOpacity>
-      ),
-    });
-  }, [navigation]);
+  const [senderRecipient, setSenderRecipient] = useContext(ChatContext);
+  
+  async function getDocument() {
+    const docRef = doc(database, "chatsTest", senderRecipient);
+    const docSnap = await getDoc(docRef);
+    return docSnap;
+  }
 
   useEffect(() => {
-    const collectionRef = collection(database, "chats");
+    const collectionRef = collection(
+      database,
+      "chatsTest",
+      senderRecipient,
+      "messages"
+    );
+    
     const q = query(collectionRef, orderBy("createdAt", "desc"));
-
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       setMessages(
         querySnapshot.docs.map((doc) => ({
@@ -54,7 +64,6 @@ function Chat({ navigation }) {
         }))
       );
     });
-
     return () => unsubscribe();
   }, []);
 
@@ -63,7 +72,19 @@ function Chat({ navigation }) {
       GiftedChat.append(previousMessages, messages)
     );
     const { _id, createdAt, text, user } = messages[0];
-    addDoc(collection(database, "chats"), {
+
+    //Prevents overwriting of sender/recipient
+    getDocument().then((data) => {
+      if (!data.exists()) {
+        setDoc(doc(database, "chatsTest", senderRecipient), {
+          senderRecipient,
+          sender: user._id,
+          recipient,
+        });
+      }
+    });
+
+    addDoc(collection(database, "chatsTest", senderRecipient, "messages"), {
       _id,
       createdAt,
       text,

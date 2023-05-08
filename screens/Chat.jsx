@@ -1,12 +1,4 @@
-
-import React, {
-  useState,
-  useEffect,
-  useLayoutEffect,
-  useCallback,
-  useContext
-} from "react";
-import { TouchableOpacity, Text } from "react-native";
+import React, { useState, useEffect, useCallback, useContext } from "react";
 import { GiftedChat } from "react-native-gifted-chat";
 import {
   collection,
@@ -25,20 +17,13 @@ import { useRoute } from "@react-navigation/native"; // added by Val
 
 function Chat({ navigation }) {
   const [messages, setMessages] = useState([]);
-
+  const [senderRecipient, setSenderRecipient] = useContext(ChatContext);
   //This will be set using profile page.
   const [recipient, setRecipient] = useState();
 
-function Chat({ navigation }) {
-  const [messages, setMessages] = useState([]);
-  const route = useRoute(); //added by Val
-  const { searchedUserUid } = route.params; //added by Val
-  const onSignOut = () => {
-    signOut(auth).catch((error) => console.log("Error logging out: ", error));
-  };
+  // const route = useRoute(); //added by Val
+  // const { searchedUserUid } = route.params; //added by Val
 
-  const [senderRecipient, setSenderRecipient] = useContext(ChatContext);
-  
   async function getDocument() {
     const docRef = doc(database, "chatsTest", senderRecipient);
     const docSnap = await getDoc(docRef);
@@ -52,7 +37,7 @@ function Chat({ navigation }) {
       senderRecipient,
       "messages"
     );
-    
+
     const q = query(collectionRef, orderBy("createdAt", "desc"));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       setMessages(
@@ -104,5 +89,4 @@ function Chat({ navigation }) {
     />
   );
 }
-
 export default Chat;

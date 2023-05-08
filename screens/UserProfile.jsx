@@ -17,8 +17,8 @@ function UserProfile() {
   const [userProfile, setUserProfile] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
-  const route = useRoute(); //added by Val
-  const { searchedUserUid } = route.params; //added by Val
+  // const route = useRoute(); //added by Val
+  // const { searchedUserUid } = route.params; //added by Val
 
   async function getUserProfile(id) {
     const docRef = doc(database, "userProfilesV2", id);

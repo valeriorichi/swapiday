@@ -30,7 +30,7 @@ const HomeImage = () => {
   return (
     <Image
       source={{
-        uri: home.image,
+        uri: home.imageUrl,
       }}
       style={{ width: 350, height: 200 }}
     />
@@ -39,7 +39,11 @@ const HomeImage = () => {
 
 const Location = () => {
   const home = useHomeContext();
-  return <Text className="text-green-600">{home.location}</Text>;
+  return (
+    <Text style={{ marginLeft: 15 }} className="text-green-600">
+      {home.houseLocation}
+    </Text>
+  );
 };
 
 const Rating = () => {
@@ -50,22 +54,29 @@ const Rating = () => {
         source={require("../assets/star.png")}
         style={{ width: 16, height: 16 }}
       />
-      <Text className="text-green-600">{home.rating}</Text>
+      <Text style={{ marginRight: 15 }} className="text-green-600">
+        {home.rating}
+      </Text>
     </View>
   );
 };
 
-const GuestCount = () => {
+const CommentCount = () => {
   const home = useHomeContext();
   return (
-    <Text className="text-green-600">{`${home.guests.min} - ${home.guests.max} Guests`}</Text>
+    <Text
+      style={{ marginRight: 15 }}
+      className="text-green-600"
+    >{`${home.commentsCount} reviews`}</Text>
   );
 };
 
 const HomeTypeAndBedrooms = () => {
   const home = useHomeContext();
   return (
-    <Text className="text-green-600">{`${home.bedrooms} bedroom ${home.type}`}</Text>
+    <Text style={{ marginLeft: 15 }} className="text-green-600">
+      {home.typeAndBedrooms}
+    </Text>
   );
 };
 
@@ -73,7 +84,7 @@ HomeCard.Info = Info;
 HomeCard.Image = HomeImage;
 HomeCard.Location = Location;
 HomeCard.Rating = Rating;
-HomeCard.GuestCount = GuestCount;
+HomeCard.CommentCount = CommentCount;
 HomeCard.HomeTypeAndBedrooms = HomeTypeAndBedrooms;
 
 export default HomeCard;

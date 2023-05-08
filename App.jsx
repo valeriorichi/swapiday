@@ -49,7 +49,7 @@ const MainNavigator = () => {
       <Tab.Screen name="Search" component={Search} />
       <Tab.Screen name="Homes" component={HomeList} />
       <Tab.Screen name="List a home" component={AddHome} />
-      <Tab.Screen name="Listing Page" component={ListingPage} />
+      <Tab.Screen name="ListingPage" component={ListingPage} />
       <Tab.Screen name="UserProfile" component={UserProfile} />
       <Tab.Screen
         name="ChatsNav"

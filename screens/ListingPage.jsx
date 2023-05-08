@@ -34,6 +34,7 @@ import { getStorage, ref, getDownloadURL, listAll } from "firebase/storage";
 import GOOGLE_API_KEY from "../google_api_key";
 import testedUser from "../temp";
 import ErrorPage from "./ErrorPage";
+import { useRoute } from "@react-navigation/native";
 
 const chatButton = require("../assets/chatButton.png");
 const wishlistButton = require("../assets/wishlistButton.png");
@@ -44,7 +45,16 @@ Geocoding.init(GOOGLE_API_KEY);
 // change userProfilesV2 for proper name which used in Firebase
 // import all pages where searchedUserUid comes from
 
-function ListingPage({ searchedUserUid = "DNuWaXM85COmHYtIXBnys2vRQxu2" }) {
+function ListingPage() {
+  const { currentUser, setCurrentUser } = useAuth();
+  const route = useRoute(); //added by Val
+  //const { searchedUserUid } = route.params; //added by Val
+  let searchedUserUid;
+  if (!route.params || !route.params.searchedUserUid) {
+    searchedUserUid = currentUser.uid;
+  } else {
+    searchedUserUid = route.params.searchedUserUid;
+  }
   const [address, setAddress] = useState("");
   const [mapPosition, setMapPosition] = useState({
     latitude: 51.507359,
@@ -58,7 +68,7 @@ function ListingPage({ searchedUserUid = "DNuWaXM85COmHYtIXBnys2vRQxu2" }) {
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [images, setImages] = useState([]);
-  const { currentUser, setCurrentUser } = useAuth();
+
   const [location, setLocation] = useState("");
   const [houseHeaderInfo, setHouseHeaderInfo] = useState("");
   const [houseInfo, setHouseInfo] = useState("");
@@ -69,6 +79,7 @@ function ListingPage({ searchedUserUid = "DNuWaXM85COmHYtIXBnys2vRQxu2" }) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("[]");
   const [userImage, setUserImage] = useState("");
+  const [typeAndBedrooms, setTypeAndBedrooms] = useState("");
   useEffect(() => {
     setIsLoading(true);
     const storage = getStorage();
@@ -116,6 +127,7 @@ function ListingPage({ searchedUserUid = "DNuWaXM85COmHYtIXBnys2vRQxu2" }) {
         setAvailableDates(doc.data().availableDates);
         setFirstName(doc.data().firstName);
         setLastName(doc.data().lastName);
+        setTypeAndBedrooms(doc.data().typeAndBedrooms);
       })
       .catch((error) => {
         console.error(error);
@@ -162,11 +174,12 @@ function ListingPage({ searchedUserUid = "DNuWaXM85COmHYtIXBnys2vRQxu2" }) {
       .catch((error) => {
         console.error("Error updating document: ", error);
       });
+    navigation.navigate("Wishlist", { searchedUserUid: searchedUserUid });
   };
 
   const goToChat = () => {
     alert("Redirecting to ChatPage");
-    navigation.navigate("Chat", { searchedUserUid: searchedUserUid });
+    navigation.navigate("ChatsNav", { searchedUserUid: searchedUserUid });
   };
 
   const goToReviewsPage = () => {
@@ -176,7 +189,7 @@ function ListingPage({ searchedUserUid = "DNuWaXM85COmHYtIXBnys2vRQxu2" }) {
 
   const goToUserProfile = () => {
     alert("Redirecting to User Profile");
-    navigation.navigate("Reviews", { searchedUserUid: searchedUserUid });
+    navigation.navigate("UserProfile", { searchedUserUid: searchedUserUid });
   };
 
   const addBooking = () => {
@@ -217,6 +230,7 @@ function ListingPage({ searchedUserUid = "DNuWaXM85COmHYtIXBnys2vRQxu2" }) {
           ))}
         </Swiper>
       </View>
+      <Text style={styles.typeAndBedrooms}>{typeAndBedrooms}</Text>
       <View style={styles.iconsContainer}>
         <TouchableOpacity
           style={[styles.icons, { opacity: toWishlist ? 0.2 : 1 }]}
@@ -455,6 +469,19 @@ const styles = StyleSheet.create({
     color: "#39C67F",
     marginTop: -10,
     marginBottom: 5,
+    textShadowColor: "#1c633f",
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 8,
+  },
+  typeAndBedrooms: {
+    justifyContent: "center",
+    textAlign: "left",
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#39C67F",
+    marginTop: -5,
+    marginBottom: -5,
+    marginLeft: 20,
     textShadowColor: "#1c633f",
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 8,

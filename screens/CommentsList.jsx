@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Button, TextInput } from "react-native";
 import CommentCard from "./CommentCard";
+import { doc, getDoc } from "firebase/firestore";
+import { database, auth } from "../config/firebase";
 
 const initialComments = [
   {
@@ -39,6 +41,17 @@ const CommentsList = () => {
     const updatedComments = comments.filter((comment) => comment.id !== id);
     setComments(updatedComments);
   };
+
+  useEffect(() => {
+    const docRef = doc(database, "userProfilesV2/DNuWaXM85COmHYtIXBnys2vRQxu2");
+    getDoc(docRef)
+      .then((doc) => {
+        setNewComment(doc.data().comments);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
   return (
     <View style={{ marginTop: 20 }}>

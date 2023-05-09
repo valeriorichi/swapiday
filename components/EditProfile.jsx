@@ -1,26 +1,26 @@
 import { useState, useContext } from 'react';
-import { Text, Image, ScrollView } from 'react-native';
-import { Button, TextInput } from 'react-native-paper';
-import {
-  doc,
-  setDoc,
-  updateDoc,
-  arrayUnion,
-  arrayRemove,
-} from 'firebase/firestore';
+import { ScrollView } from 'react-native';
+import { Button, TextInput, Image } from 'react-native-paper';
+import { doc, updateDoc } from 'firebase/firestore';
 import { database } from '../config/firebase';
 import { useAuth } from '../contexts/AuthContext';
 import { LoginContext } from '../contexts/LoggedInContext';
+import { getStorage, ref, uploadBytes } from 'firebase/storage';
+import * as ImagePicker from 'expo-image-picker';
 
-function EditProfile({ userProfile, uid }) {
+function EditProfile({ userProfile, setIsEditing }) {
   const { currentUser, setCurrentUser } = useAuth();
+  const storage = getStorage();
   const [isLoggedIn, setIsLoggedIn] = useContext(LoginContext);
-
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [bio, setBio] = useState('');
   const [location, setLocation] = useState('');
-  const [rating, setRating] = useState('');
+
+  const profileImgRef = ref(
+    storage,
+    `users/${currentUser.uid}/userImages/userImage.jpg`
+  );
 
   const handleSaveChanges = () => {
     const user = {};
@@ -36,40 +36,92 @@ function EditProfile({ userProfile, uid }) {
     if (location) {
       user.location = location;
     }
-    if (rating) {
-      user.rating = rating;
-    }
 
     const docRef = doc(database, 'userProfilesV2', currentUser.uid);
     updateDoc(docRef, user)
       .then(() => {
         alert('Changes saved!');
         setIsLoggedIn(true);
+        setIsEditing(false);
       })
       .catch((err) => {
         alert(`Error saving changes: ${err}`);
       });
   };
-  const handleCreateUser = () => {
-    const user = {};
-    if (firstName) {
-      user.firstName = firstName;
-    }
-    if (lastName) {
-      user.lastName = lastName;
-    }
-    if (location) {
-      user.location = location;
-    }
-    const docRef = doc(database, 'userProfilesV2', currentUser.uid);
-    updateDoc(docRef, user)
-      .then(() => {
-        alert('Changes saved!');
+
+  const handleImageUpload = () => {
+    ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    })
+      .then((img) => {
+        return fetch(img.assets[0].uri);
+      })
+      .then((file) => {
+        return uploadBytes(profileImgRef, file.blob());
+      })
+      .then((snapshot) => {
+        console.log('snapshot :>> ', snapshot);
       })
       .catch((err) => {
-        alert(`Error saving changes: ${err}`);
+        console.log('err :>> ', err);
       });
+
+    // const response = await fetch(img.assets[0].uri);
+    // console.log('response :>> ', response);
+    // const blob = response.blob();
+    // console.log('blob :>> ', blob);
+    // uploadBytes(profileImgRef, blob)
+    //   .then((snapshot) => {
+    //     console.log('snapshot');
+    //   })
+    //   .catch((err) => {
+    //     console.log('err :>> ', err);
+    //   });
+
+    // console.log('assets :>> ', img.assets[0].uri);
+    // uploadBytes(profileImgRef, img.assets[0].uri)
+    //   .then((snapshot) => {
+    //     console.log('snapshot >> ', snapshot);
+    //   })
+    // .catch((err) => {
+    //   console.log('err >> ', err);
+    // });
   };
+
+  //   , (response) => {
+  //     if (response.didCancel) {
+  //       alert('User cancelled image picker');
+  //     } else if (response.errorCode) {
+  //       alert(`ImagePicker Error: ${response.errorCode}`);
+  //     } else {
+  //       const image = response.assets[0];
+  //       const uploadTask = ref(
+  //         storage,
+  //         `users/${currentUser.uid}/userImages/userImage.jpg`
+  //       );
+  //       uploadTask.putFile(image.uri).then((snapshot) => {
+  //         console.log('Uploaded a blob or file!');
+  //         getDownloadURL(uploadTask).then((url) => {
+
+  //           const docRef = doc(database, 'userProfilesV2', currentUser.uid);
+  //           updateDoc(docRef, { profileImgUrl: url })
+
+  //             .then(() => {
+  //               alert('Image uploaded!');
+  //               setIsLoggedIn(true);
+  //               setIsEditing(false);
+  //             })
+  //             .catch((err) => {
+  //               alert(`Error saving changes: ${err}`);
+  //             });
+  //         });
+  //       });
+  //     }
+  //   });
+  // };
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: 'white', padding: 20 }}>
@@ -113,7 +165,9 @@ function EditProfile({ userProfile, uid }) {
           setLocation(location);
         }}
       />
-
+      <Button style="padding=20" onPress={handleImageUpload}>
+        Upload Profile Image
+      </Button>
       <Button style="padding=20" onPress={handleSaveChanges}>
         Save Changes
       </Button>

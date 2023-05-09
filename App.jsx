@@ -24,6 +24,7 @@ import RateForm from "./screens/RateForm";
 import ErrorPage from "./screens/ErrorPage.jsx";
 import WishList from "./screens/WishList";
 import { ChatContextProvider } from "./contexts/ChatContext";
+import UserProfileTest from "./screens/UserProfileTest";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -51,6 +52,7 @@ const MainNavigator = () => {
       <Tab.Screen name="List a home" component={AddHome} />
       <Tab.Screen name="ListingPage" component={ListingPage} />
       <Tab.Screen name="UserProfile" component={UserProfile} />
+      <Tab.Screen name="UserProfileTest" component={UserProfileTest} />
       <Tab.Screen
         name="ChatsNav"
         component={ChatsNav}

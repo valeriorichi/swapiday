@@ -2,15 +2,17 @@ import React, { useState, useEffect, useContext } from "react";
 import { collection, getDocs, where, query } from "firebase/firestore";
 import { database } from "../config/firebase";
 import { Image } from "react-native";
-import { List } from "react-native-paper";
+import { List, ActivityIndicator } from "react-native-paper";
 import { useAuth } from "../contexts/AuthContext";
 import { ChatContext } from "../contexts/ChatContext";
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
 function Chats({ navigation }) {
   const [chatList, setChatList] = useState([]);
   const { currentUser, setCurrentUser } = useAuth();
   const [senderRecipient, setSenderRecipient] = useContext(ChatContext);
-
+  const [recipientAvatar, setRecipientAvatar] = useState();
+  const [isLoading, setIsLoading] = useState();
   const chatArr = [];
   async function getChats() {
     const [senderQuerySnapshot, recipientQuerySnapshot] = await Promise.all([
@@ -28,25 +30,65 @@ function Chats({ navigation }) {
       ),
     ]);
     senderQuerySnapshot.forEach((doc) => {
-      chatArr.push(doc.id);
+      console.log(doc.data().recipient);
+      chatArr.push({
+        docId: doc.id,
+        docRecipient: doc.data().recipient,
+        docSender: doc.data().sender,
+      });
     });
     recipientQuerySnapshot.forEach((doc) => {
-      chatArr.push(doc.id);
+      chatArr.push({
+        docId: doc.id,
+        docRecipient: doc.data().recipient,
+        docSender: doc.data().sender,
+      });
     });
   }
   useEffect(() => {
-    getChats().then(() => setChatList(chatArr));
+    setIsLoading(true);
+    getChats().then(() => {
+      setChatList(chatArr);
+      console.log(chatList);
+      setIsLoading(false);
+    });
   }, []);
+
+  if (isLoading) {
+    return (
+      <>
+        <ActivityIndicator />
+      </>
+    );
+  }
 
   return (
     <>
       {chatList.map((item, i) => {
+        const storage = getStorage();
+        const reference = ref(
+          storage,
+          `users/${currentUser.uid}/userImages/userImage.jpg`
+        );
+        getDownloadURL(reference)
+          .then((url) => {
+            setRecipientAvatar(url);
+          })
+          .then(() => {
+            setIsLoading(false);
+          })
+          .catch((e) => console.log(e));
+
         return (
           <List.Item
-            title={item}
+            title={
+              item.docRecipient === currentUser.email
+                ? item.docSender
+                : item.docRecipient
+            }
             key={i}
             onPress={() => {
-              setSenderRecipient(item);
+              setSenderRecipient(item.docId);
               navigation.navigate("Chat");
             }}
             left={(props) => (
@@ -54,7 +96,7 @@ function Chats({ navigation }) {
                 {...props}
                 icon={() => (
                   <Image
-                    source={require("../imagesTemp/avatar.png")}
+                    source={{ uri: recipientAvatar }}
                     style={{ width: 50, height: 50 }}
                   />
                 )}

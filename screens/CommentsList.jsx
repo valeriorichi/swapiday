@@ -46,7 +46,6 @@ const CommentsList = () => {
     const docRef = doc(database, "userProfilesV2/DNuWaXM85COmHYtIXBnys2vRQxu2");
     getDoc(docRef)
       .then((doc) => {
-        console.log(doc.data().comments);
         setComments(doc.data().comments);
       })
       .catch((error) => {
@@ -56,9 +55,9 @@ const CommentsList = () => {
 
   return (
     <View style={{ marginTop: 20 }}>
-      {comments.map((comment) => (
+      {comments.map((comment, index) => (
         <CommentCard
-          key={comment.id}
+          key={index}
           user={comment}
           comment={comment}
           onDelete={handleDeleteComment}

@@ -41,7 +41,7 @@ function WishList() {
     const docRef = doc(database, `userProfilesV2/${currentUser.uid}`);
     getDoc(docRef)
       .then((doc) => {
-        setWishListArray(doc.data().wishList);
+        setWishListArray(doc.data().wishList ?? []);
       })
       .catch((error) => {
         console.error(error);

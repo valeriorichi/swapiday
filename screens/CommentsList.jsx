@@ -15,7 +15,7 @@ const initialComments = [
 ];
 
 const CommentsList = () => {
-  const [comments, setComments] = useState(initialComments);
+  const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const currentUser = "User"; // Replace with the username of the logged-in user
 
@@ -46,7 +46,8 @@ const CommentsList = () => {
     const docRef = doc(database, "userProfilesV2/DNuWaXM85COmHYtIXBnys2vRQxu2");
     getDoc(docRef)
       .then((doc) => {
-        setNewComment(doc.data().comments);
+        console.log(doc.data().comments);
+        setComments(doc.data().comments);
       })
       .catch((error) => {
         console.error(error);

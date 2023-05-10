@@ -1,20 +1,20 @@
-import * as React from 'react';
-import { Searchbar, Button } from 'react-native-paper';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import * as React from "react";
+import { Searchbar, Button } from "react-native-paper";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import * as React from "react";
+import { Button } from "react-native-paper";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
-  showCheckinDatePicker,
-  showCheckoutDatePicker,
   TextInput,
-  calenderDate,
   ScrollView,
-} from 'react-native';
-import DropDown from 'react-native-paper-dropdown';
-import { useState, useEffect } from 'react';
-import LogoHeader from './LogoHeader';
+} from "react-native";
+import DropDown from "react-native-paper-dropdown";
+import { useState, useEffect } from "react";
+import LogoHeader from "./LogoHeader";
 import {
   doc,
   getDoc,
@@ -38,14 +38,20 @@ import {
 } from "firebase/firestore";
 import { getStorage, ref, getDownloadURL, listAll } from "firebase/storage";
 import { database, auth } from "../config/firebase";
+import { useState, useEffect } from "react";
+import LogoHeader from "./LogoHeader";
+import { collection, getDocs } from "firebase/firestore";
+
+import { database } from "../config/firebase";
 import "firebase/firestore";
 import HomeCard from "../components/HomeCard";
 import { useAuth } from "../contexts/AuthContext";
 import { useRoute } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
+import { useAuth } from "../contexts/AuthContext";
 
-function Search() {
-  const [searchQuery, setSearchQuery] = React.useState('');
+function Search({ navigation }) {
+  const [searchQuery, setSearchQuery] = React.useState("");
   const [showCheckinDatePicker, setShowCheckinDatePicker] = useState(false);
   const [showCheckoutDatePicker, setShowCheckoutDatePicker] = useState(false);
   const [checkinDate, setCheckinDate] = useState(new Date());
@@ -59,11 +65,12 @@ function Search() {
   const [userList, setUserList] = useState([{}]);
   const onChangeSearch = (query) => setSearchQuery(query);
   const navigation = useNavigation();
-  //console.log("currentUser", currentUser.uid);
+  //console.log("currentUser", currentUser.uid);  const { currentUser } = useAuth();
+
   //const docRef = doc(database, `userProfiles`);
   //console.log(searchQuery, checkinDate, checkoutDate);
   useEffect(() => {
-    const usersCollection = collection(database, 'userProfiles');
+    const usersCollection = collection(database, "userProfiles");
     getDocs(usersCollection)
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
@@ -135,6 +142,7 @@ function Search() {
 
   function handleSearchPress() {
     setIsSearching(true);
+
     // Perform search logic here
   }
 
@@ -160,10 +168,10 @@ function Search() {
         <View
           style={{
             flex: 1,
-            justifyContent: 'space-between',
-            width: '80%',
-            marginLeft: '10%',
-            marginTop: '10%',
+            justifyContent: "space-between",
+            width: "80%",
+            marginLeft: "10%",
+            marginTop: "10%",
           }}
         >
           <View style={styles.searchContainer}>
@@ -177,9 +185,9 @@ function Search() {
 
           <View
             style={{
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
             <TouchableOpacity
@@ -187,10 +195,10 @@ function Search() {
               style={[styles.dateContainer, { marginRight: 10 }]}
             >
               <Text style={styles.dateText}>
-                Check-in Date:{' '}
+                Check-in Date:{" "}
                 {checkinDate.toLocaleDateString() ===
                 new Date().toLocaleDateString()
-                  ? 'Enter'
+                  ? "Enter"
                   : checkinDate?.toLocaleDateString()}
               </Text>
             </TouchableOpacity>
@@ -199,10 +207,10 @@ function Search() {
               style={styles.dateContainer}
             >
               <Text style={styles.dateText}>
-                Check-out Date:{' '}
+                Check-out Date:{" "}
                 {checkoutDate.toLocaleDateString() ===
                 new Date().toLocaleDateString()
-                  ? 'enter'
+                  ? "enter"
                   : checkoutDate.toLocaleDateString()}
               </Text>
             </TouchableOpacity>
@@ -245,7 +253,7 @@ function Search() {
                 setIsSearching(false);
               }}
               style={styles.searchButton}
-              labelStyle={{ fontWeight: 'bold' }}
+              labelStyle={{ fontWeight: "bold" }}
             >
               Search
             </Button>
@@ -271,9 +279,9 @@ function Search() {
         <Text style={styles.header}>Available houses:</Text>
         <View
           style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            flexWrap: 'wrap',
+            flexDirection: "row",
+            justifyContent: "center",
+            flexWrap: "wrap",
           }}
         >
           {userList.map((userHome, index) => (
@@ -288,6 +296,21 @@ function Search() {
                     <Text style={styles.buttonText}>House info</Text>
                   </TouchableOpacity>
                 </View>
+                <Button
+                  modeValue="contained"
+                  title="Chat"
+                  onPress={() => {
+                    navigation.navigate("ChatsNav", {
+                      screen: "Chat",
+                      params: {
+                        sender: currentUser.uid,
+                        recipient: userHome.firstName,
+                      },
+                    });
+                  }}
+                >
+                  Chat
+                </Button>
 
                 <HomeCard.Info>
                   <HomeCard.Location />
@@ -310,13 +333,13 @@ function Search() {
 const styles = StyleSheet.create({
   searchContainer: {
     borderWidth: 1,
-    borderColor: '#39C67F',
+    borderColor: "#39C67F",
     borderRadius: 10,
     padding: 10,
   },
   searchInput: {
     fontSize: 16,
-    color: '#000',
+    color: "#000",
   },
   containerStyle: {
     flex: 1,
@@ -327,22 +350,22 @@ const styles = StyleSheet.create({
   safeContainerStyle: {
     flex: 1,
     margin: 20,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   logoHeader: {
     paddingTop: 5,
     paddingBottom: 5,
-    width: '100%',
-    resizeMode: 'contain',
-    alignSelf: 'center',
-    justifyContent: 'center',
+    width: "100%",
+    resizeMode: "contain",
+    alignSelf: "center",
+    justifyContent: "center",
     marginTop: 20,
     marginBottom: 20,
   },
   dateContainer: {
     borderWidth: 1,
     borderRadius: 20,
-    borderColor: '#39C67F',
+    borderColor: "#39C67F",
     marginBottom: 10,
   },
   dateInput: {
@@ -354,36 +377,36 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   header: {
-    justifyContent: 'center',
-    textAlign: 'center',
+    justifyContent: "center",
+    textAlign: "center",
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#39C67F',
+    fontWeight: "bold",
+    color: "#39C67F",
     marginTop: 20,
     marginBottom: 20,
-    textShadowColor: '#1c633f',
+    textShadowColor: "#1c633f",
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 8,
   },
   searchButton: {
     width: 300,
     height: 30,
-    backgroundColor: '#DAEBDD',
+    backgroundColor: "#DAEBDD",
     borderRadius: 12.5,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderWidth: 4,
-    borderColor: '#39C67F',
-    alignSelf: 'flex-end',
+    borderColor: "#39C67F",
+    alignSelf: "flex-end",
     marginRight: 20,
     marginBottom: 5,
     marginTop: 15,
   },
   searchButtonText: {
     fontSize: 24,
-    textAlign: 'center',
-    color: '#39C67F',
-    textShadowColor: '#1c633f',
+    textAlign: "center",
+    color: "#39C67F",
+    textShadowColor: "#1c633f",
     textShadowOffset: { width: 1, height: 2 },
     textShadowRadius: 1,
     marginTop: -15,

@@ -4,13 +4,11 @@ import { database } from "../config/firebase";
 import { Image } from "react-native";
 import { List, ActivityIndicator } from "react-native-paper";
 import { useAuth } from "../contexts/AuthContext";
-import { ChatContext } from "../contexts/ChatContext";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
 function Chats({ navigation }) {
   const [chatList, setChatList] = useState([]);
-  const { currentUser, setCurrentUser } = useAuth();
-  const [senderRecipient, setSenderRecipient] = useContext(ChatContext);
+  const { currentUser } = useAuth();
   const [recipientAvatar, setRecipientAvatar] = useState();
   const [isLoading, setIsLoading] = useState();
   const chatArr = [];
@@ -19,13 +17,13 @@ function Chats({ navigation }) {
       getDocs(
         query(
           collection(database, "chatsTest"),
-          where("sender", "==", currentUser.email)
+          where("sender", "==", currentUser.uid)
         )
       ),
       getDocs(
         query(
           collection(database, "chatsTest"),
-          where("recipient", "==", currentUser.email)
+          where("recipient", "==", currentUser.uid)
         )
       ),
     ]);
@@ -34,6 +32,7 @@ function Chats({ navigation }) {
         docId: doc.id,
         docRecipient: doc.data().recipient,
         docSender: doc.data().sender,
+        docName: doc.data().name,
       });
     });
     recipientQuerySnapshot.forEach((doc) => {
@@ -41,6 +40,7 @@ function Chats({ navigation }) {
         docId: doc.id,
         docRecipient: doc.data().recipient,
         docSender: doc.data().sender,
+        docName: doc.data().name,
       });
     });
   }
@@ -79,15 +79,13 @@ function Chats({ navigation }) {
 
         return (
           <List.Item
-            title={
-              item.docRecipient === currentUser.email
-                ? item.docSender
-                : item.docRecipient
-            }
+            title={item.docName}
             key={i}
             onPress={() => {
-              setSenderRecipient(item.docId);
-              navigation.navigate("Chat");
+              navigation.navigate("Chat", {
+                sender: item.docSender,
+                recipient: item.docRecipient,
+              });
             }}
             left={(props) => (
               <List.Icon

@@ -10,7 +10,6 @@ import {
 } from "firebase/firestore";
 import { database, auth } from "../config/firebase";
 import { useAuth } from "../contexts/AuthContext";
-import { ScrollView } from "react-native-gesture-handler";
 
 const CommentsList = () => {
   // const { currentUser, setCurrentUser } = useAuth();
@@ -81,30 +80,28 @@ const CommentsList = () => {
   };
 
   return (
-    <ScrollView>
-      <View style={{ marginTop: 20 }}>
-        {comments.map((comment, index) => (
-          <CommentCard
-            key={index}
-            user={comment}
-            comment={comment}
-            currentUser={currentUser}
-            onDelete={() => handleDeleteComment(comment)}
-            deletedComment={deletedComment}
-          />
-        ))}
-        <TextInput
-          value={newComment}
-          onChangeText={setNewComment}
-          placeholder="Add a comment..."
+    <View style={{ marginTop: 20 }}>
+      {comments.map((comment, index) => (
+        <CommentCard
+          key={index}
+          user={comment}
+          comment={comment}
+          currentUser={currentUser}
+          onDelete={() => handleDeleteComment(comment)}
+          deletedComment={deletedComment}
         />
-        <Button
-          title="Add Comment"
-          onPress={handleAddComment}
-          disabled={addedComment}
-        />
-      </View>
-    </ScrollView>
+      ))}
+      <TextInput
+        value={newComment}
+        onChangeText={setNewComment}
+        placeholder="Add a comment..."
+      />
+      <Button
+        title="Add Comment"
+        onPress={handleAddComment}
+        disabled={addedComment}
+      />
+    </View>
   );
 };
 

@@ -46,6 +46,7 @@ const MyStack = () => {
   return (
     <ChatContextProvider>
       <Stack.Navigator>
+        <Stack.Screen name="Search" component={Search} />
         <Stack.Screen name="WishList" component={WishList} />
         <Stack.Screen name="ListingPage" component={ListingPage} />
         <Stack.Screen name="Chats" component={Chats} />
@@ -60,7 +61,7 @@ const MainNavigator = () => {
     <Tab.Navigator>
       <Tab.Screen
         name="Search"
-        component={Search}
+        component={MyStack}
         options={{
           tabBarIcon: () => (
             <Icon name="home-search" size={30} color="#16a34a" />
@@ -74,7 +75,7 @@ const MainNavigator = () => {
       />
       <Tab.Screen
         name="Liked Homes"
-        component={MyStack}
+        component={WishList}
         options={{
           tabBarIcon: () => (
             <Icon name="home-heart" size={30} color="#16a34a" />

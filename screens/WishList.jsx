@@ -110,7 +110,7 @@ function WishList() {
       fromWishList: true,
     });
   };
-  console.log("userList------>>>", userList);
+
   return (
     <ScrollView>
       <LogoHeader />

@@ -1,63 +1,80 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Button, TextInput } from "react-native";
 import CommentCard from "./CommentCard";
-
-const initialComments = [
-  {
-    id: 1,
-    name: "John Doe",
-    avatar: "https://i.pravatar.cc/150?img=3",
-    date: "May 2023",
-    body: "This is the first comment.",
-  },
-];
+import {
+  doc,
+  getDoc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+} from "firebase/firestore";
+import { database, auth } from "../config/firebase";
+import { useAuth } from "../contexts/AuthContext";
+import { ScrollView } from "react-native-gesture-handler";
 
 const CommentsList = () => {
-  const [comments, setComments] = useState(initialComments);
+  const { currentUser, setCurrentUser } = useAuth();
+  const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
-  const currentUser = "User"; // Replace with the username of the logged-in user
+  const [addedComment, setAddedComment] = useState(false);
+  const [deletedComment, setDeletedComment] = useState(false);
+
+  useEffect(() => {
+    const docRef = doc(database, `userProfilesV2/${currentUser.uid}`);
+    getDoc(docRef)
+      .then((doc) => {
+        setComments(doc.data().comments);
+      })
+      .then(() => {
+        console.log("currentUser.uid", currentUser.uid);
+        console.log("comments", comments);
+        console.log("comments[0]", comments[0]);
+        console.log(comments[0]["userId"]), "<<<<LINE 26";
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
   const handleAddComment = () => {
-    const id = comments.length + 1;
-    const date = new Date().toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-    const comment = {
-      id,
-      name: "User",
-      avatar: "https://i.pravatar.cc/150?img=1",
-      date,
-      body: newComment,
-    };
-    setComments([...comments, comment]);
-    setNewComment("");
+    const docRef = doc(database, `userProfilesV2/${currentUser.uid}`);
+    updateDoc(docRef, {
+      comments: arrayUnion({ body: newComment, userId: currentUser.uid }),
+    })
+      .then(() => {
+        setAddedComment(true);
+      })
+      .catch((error) => {
+        console.error("Error updating document: ", error);
+      });
   };
 
-  const handleDeleteComment = (id) => {
-    const updatedComments = comments.filter((comment) => comment.id !== id);
-    setComments(updatedComments);
-  };
+  // const updatedComments = comments.filter((comment) => comment.id !== id);
+  // setComments(updatedComments);
 
   return (
-    <View style={{ marginTop: 20 }}>
-      {comments.map((comment) => (
-        <CommentCard
-          key={comment.id}
-          user={comment}
-          comment={comment}
-          onDelete={handleDeleteComment}
-          currentUser={currentUser}
+    <ScrollView>
+      <View style={{ marginTop: 20 }}>
+        {comments.map((comment, index) => (
+          <CommentCard
+            key={index}
+            user={comment}
+            comment={comment}
+            currentUser={currentUser}
+          />
+        ))}
+        <TextInput
+          value={newComment}
+          onChangeText={setNewComment}
+          placeholder="Add a comment..."
         />
-      ))}
-      <TextInput
-        value={newComment}
-        onChangeText={setNewComment}
-        placeholder="Add a comment..."
-      />
-      <Button title="Add Comment" onPress={handleAddComment} />
-    </View>
+        <Button
+          title="Add Comment"
+          onPress={handleAddComment}
+          disabled={addedComment}
+        />
+      </View>
+    </ScrollView>
   );
 };
 

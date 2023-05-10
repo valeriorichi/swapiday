@@ -139,7 +139,6 @@ function UserProfile({ navigation }) {
                   mode="contained"
                   buttonColor="#39C67F"
                   onPress={() => {
-                    console.log(currentUser.email);
                     setSenderRecipient(currentUser.email + userProfile);
                     navigation.navigate("Chat");
                   }}

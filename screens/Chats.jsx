@@ -30,7 +30,6 @@ function Chats({ navigation }) {
       ),
     ]);
     senderQuerySnapshot.forEach((doc) => {
-      console.log(doc.data().recipient);
       chatArr.push({
         docId: doc.id,
         docRecipient: doc.data().recipient,
@@ -49,7 +48,6 @@ function Chats({ navigation }) {
     setIsLoading(true);
     getChats().then(() => {
       setChatList(chatArr);
-      console.log(chatList);
       setIsLoading(false);
     });
   }, []);

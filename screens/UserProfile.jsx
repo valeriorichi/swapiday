@@ -4,19 +4,22 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button, ActivityIndicator } from 'react-native-paper';
 import { useAuth } from '../contexts/AuthContext';
 import { LoginContext } from '../contexts/LoggedInContext';
+import { ChatContext } from '../contexts/ChatContext';
 import { database, storage } from '../config/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { ref, getDownloadURL } from 'firebase/storage';
 import EditProfile from '../components/EditProfile';
+import AddHome from '../components/AddHome';
 
 function UserProfile({ navigation }) {
-  const [profileImgUrl, setProfileImgUrl] = useState("");
+  const [profileImgUrl, setProfileImgUrl] = useState('');
   const { currentUser, setCurrentUser } = useAuth();
   const [isLoggedIn, setIsLoggedIn] = useContext(LoginContext);
   const [userProfile, setUserProfile] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [senderRecipient, setSenderRecipient] = useContext(ChatContext);
+  const [addingHome, setAddingHome] = useState(false);
 
   async function getUserProfile(id) {
     const docRef = doc(database, 'userProfilesV2', id);
@@ -64,6 +67,16 @@ function UserProfile({ navigation }) {
     );
   }
 
+  if (addingHome) {
+    return (
+      <AddHome
+        addingHome={addingHome}
+        setAddingHome={setAddingHome}
+        userProfile={userProfile}
+      />
+    );
+  }
+
   if (userProfile) {
     return (
       <SafeAreaView style={{ flex: 1 }}>
@@ -102,9 +115,9 @@ function UserProfile({ navigation }) {
               }}
               mode="contained"
               buttonColor="#39C67F"
-              onPress={() => console.log('Pressed')}
+              onPress={() => setAddingHome(true)}
             >
-              List My House
+              Add my home
             </Button>
             <Button
               style={{
@@ -139,14 +152,13 @@ function UserProfile({ navigation }) {
               <Text>{userProfile.firstName + ' ' + userProfile.lastName}</Text>
               <Text>{userProfile.location}</Text>
 
-              <Text>{userProfile.rating + " *"}</Text>
               {!userProfile.uid === currentUser.uid ? (
                 <Button
                   mode="contained"
                   buttonColor="#39C67F"
                   onPress={() => {
                     setSenderRecipient(currentUser.email + userProfile);
-                    navigation.navigate("Chat");
+                    navigation.navigate('Chat');
                   }}
                 >
                   Contact Me

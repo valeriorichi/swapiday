@@ -84,7 +84,6 @@ function HomeList() {
   }, [wishListArray]);
 
   const goToListingPage = (userHomeUid) => {
-    console.log(userHomeUid);
     alert('Redirecting to ListingPage');
     navigation.navigate('ListingPage', { searchedUserUid: userHomeUid });
   };

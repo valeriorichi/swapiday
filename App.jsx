@@ -16,7 +16,7 @@ import ListingPage from "./screens/ListingPage";
 import UpdateListing from "./screens/UpdateListing";
 import LoginSignUp from "./screens/LoginSignUp";
 import UserProfile from "./screens/UserProfile";
-import Reviews from "./screens/Reviews";
+import CommentsList from "./screens/CommentsList";
 import DebugAccount from "./screens/DebugAccount";
 import Search from "./screens/Search";
 import Chats from "./screens/Chats";
@@ -45,6 +45,19 @@ const ChatsNav = () => {
   );
 };
 
+const MyStack = () => {
+  return (
+    <ChatContextProvider>
+      <Stack.Navigator>
+        <Stack.Screen name="WishList" component={WishList} />
+        <Stack.Screen name="ListingPage" component={ListingPage} />
+        <Stack.Screen name="Chats" component={Chats} />
+        <Stack.Screen name="CommentsList" component={CommentsList} />
+      </Stack.Navigator>
+    </ChatContextProvider>
+  );
+};
+
 const MainNavigator = () => {
   return (
     <Tab.Navigator>
@@ -64,7 +77,7 @@ const MainNavigator = () => {
       />
       <Tab.Screen
         name="Liked Homes"
-        component={WishList}
+        component={MyStack}
         options={{
           tabBarIcon: () => (
             <Icon name="home-heart" size={30} color="#16a34a" />

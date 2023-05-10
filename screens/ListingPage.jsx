@@ -48,7 +48,7 @@ Geocoding.init(GOOGLE_API_KEY);
 function ListingPage() {
   const { currentUser, setCurrentUser } = useAuth();
   const route = useRoute(); //added by Val
-  //const { searchedUserUid } = route.params; //added by Val
+  const { fromWishList } = route.params; //added by Val
   let searchedUserUid;
   if (!route.params || !route.params.searchedUserUid) {
     searchedUserUid = currentUser.uid;
@@ -113,13 +113,16 @@ function ListingPage() {
         console.error(error);
       });
 
-    const docRef = doc(database, `userProfilesV2/${searchedUserUid}`);
+    const docRef = doc(database, `userProfiles/${searchedUserUid}`);
     getDoc(docRef)
       .then((doc) => {
         setLocation(doc.data().location);
         setHouseHeaderInfo(doc.data().houseHeaderInfo);
         const reviewsArray = doc.data().reviews;
-        const sum = reviewsArray.reduce((acc, review) => acc + review, 0);
+        const sum = reviewsArray.reduce(
+          (acc, review) => acc + parseFloat(review),
+          0
+        );
         const averageReview = (sum / reviewsArray.length).toFixed(1);
         setReviewsField(averageReview);
         setCommentsField(doc.data().comments.length);
@@ -163,7 +166,7 @@ function ListingPage() {
     Linking.openURL(url);
   };
   const addToWishlist = () => {
-    const docRef = doc(database, `userProfilesV2/${searchedUserUid}`);
+    const docRef = doc(database, `userProfiles/${searchedUserUid}`);
     updateDoc(docRef, {
       wishList: arrayUnion(searchedUserUid),
     })
@@ -178,8 +181,8 @@ function ListingPage() {
   };
 
   const goToChat = () => {
-    alert("Redirecting to ChatPage");
-    navigation.navigate("ChatsNav", { searchedUserUid: searchedUserUid });
+    alert("Redirecting to ChatsPage");
+    navigation.navigate("Chats", { searchedUserUid: searchedUserUid });
   };
 
   const goToReviewsPage = () => {
@@ -193,8 +196,8 @@ function ListingPage() {
   };
 
   const addBooking = () => {
-    const docRef = doc(database, `userProfilesV2/${searchedUserUid}`);
-    const docRef1 = doc(database, `userProfilesV2/${currentUser.uid}`);
+    const docRef = doc(database, `userProfiles/${searchedUserUid}`);
+    const docRef1 = doc(database, `userProfiles/${currentUser.uid}`);
 
     Promise.all([
       updateDoc(docRef, { reservedMe: arrayUnion(searchedUserUid) }),
@@ -233,8 +236,12 @@ function ListingPage() {
       <Text style={styles.typeAndBedrooms}>{typeAndBedrooms}</Text>
       <View style={styles.iconsContainer}>
         <TouchableOpacity
-          style={[styles.icons, { opacity: toWishlist ? 0.2 : 1 }]}
-          disabled={toWishlist}
+          style={[
+            styles.icons,
+            { opacity: toWishlist ? 0.2 : 1 },
+            { opacity: fromWishList ? 0 : 1 },
+          ]}
+          disabled={toWishlist || fromWishList}
           onPress={addToWishlist}
         >
           <Image

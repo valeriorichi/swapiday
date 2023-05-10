@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -9,22 +10,20 @@ import {
 import { createStackNavigator } from "@react-navigation/stack";
 import { LoginContext, LoginContextProvider } from "./contexts/LoggedInContext";
 import Landing from "./screens/Landing";
-import HomeList from "./screens/HomeList";
 import AddHome from "./screens/AddHome";
-import ListingPage from "./screens/ListingPage";
-import UpdateListing from "./screens/UpdateListing";
 import LoginSignUp from "./screens/LoginSignUp";
 import UserProfile from "./screens/UserProfile";
-import Reviews from "./screens/Reviews";
-import DebugAccount from "./screens/DebugAccount";
 import Search from "./screens/Search";
 import Chats from "./screens/Chats";
 import Chat from "./screens/Chat";
-import RateForm from "./screens/RateForm";
-import ErrorPage from "./screens/ErrorPage.jsx";
 import WishList from "./screens/WishList";
 import { ChatContextProvider } from "./contexts/ChatContext";
 
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import ListingPage from "./screens/ListingPage";
+import CommentsList from "./screens/CommentsList";
+import RateForm from "./screens/RateForm";
+import ErrorPage from "./screens/ErrorPage.jsx";
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
@@ -43,25 +42,87 @@ const ChatsNav = () => {
   );
 };
 
+const MyStack = () => {
+  return (
+    <ChatContextProvider>
+      <Stack.Navigator>
+        <Stack.Screen name="WishList" component={WishList} />
+        <Stack.Screen name="ListingPage" component={ListingPage} />
+        <Stack.Screen name="Chats" component={Chats} />
+        <Stack.Screen name="CommentsList" component={CommentsList} />
+      </Stack.Navigator>
+    </ChatContextProvider>
+  );
+};
+
 const MainNavigator = () => {
   return (
     <Tab.Navigator>
-      <Tab.Screen name="Search" component={Search} />
-      <Tab.Screen name="Homes" component={HomeList} />
-      <Tab.Screen name="List a home" component={AddHome} />
-      <Tab.Screen name="ListingPage" component={ListingPage} />
-      <Tab.Screen name="UserProfile" component={UserProfile} />
       <Tab.Screen
-        name="ChatsNav"
-        component={ChatsNav}
-        options={{ headerShown: false }}
+        name="Search"
+        component={Search}
+        options={{
+          tabBarIcon: () => (
+            <Icon name="home-search" size={30} color="#16a34a" />
+          ),
+          tabBarLabel: () => (
+            <Text style={{ color: "black", fontWeight: "thin", fontSize: 12 }}>
+              Search
+            </Text>
+          ),
+        }}
       />
-      <Tab.Screen name="UpdateListing" component={UpdateListing} />
-      <Tab.Screen name="Reviews" component={Reviews} />
-      <Tab.Screen name="WishList" component={WishList} />
-      <Tab.Screen name="Debug" component={DebugAccount} />
-      <Tab.Screen name="RateForm" component={RateForm} />
-      <Tab.Screen name="Errors" component={ErrorPage} />
+      <Tab.Screen
+        name="Liked Homes"
+        component={MyStack}
+        options={{
+          tabBarIcon: () => (
+            <Icon name="home-heart" size={30} color="#16a34a" />
+          ),
+          tabBarLabel: () => (
+            <Text style={{ color: "black", fontWeight: "thin", fontSize: 12 }}>
+              Liked Homes
+            </Text>
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="My Profile"
+        component={UserProfile}
+        options={{
+          tabBarIcon: () => <Icon name="account" size={30} color="#16a34a" />,
+          tabBarLabel: () => (
+            <Text style={{ color: "black", fontWeight: "thin", fontSize: 12 }}>
+              My Profile
+            </Text>
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="List a home"
+        component={AddHome}
+        options={{
+          tabBarIcon: () => <Icon name="home-plus" size={30} color="#16a34a" />,
+          tabBarLabel: () => (
+            <Text style={{ color: "black", fontWeight: "thin", fontSize: 12 }}>
+              List Home
+            </Text>
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Chats "
+        component={ChatsNav}
+        options={{
+          headerShown: false,
+          tabBarIcon: () => <Icon name="chat" size={30} color="#16a34a" />,
+          tabBarLabel: () => (
+            <Text style={{ color: "black", fontWeight: "thin", fontSize: 12 }}>
+              Chats
+            </Text>
+          ),
+        }}
+      />
     </Tab.Navigator>
   );
 };

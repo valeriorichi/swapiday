@@ -1,25 +1,25 @@
-import { Text, View, Image } from 'react-native';
-import React, { useContext, useEffect, useState } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Button, ActivityIndicator } from 'react-native-paper';
-import { useAuth } from '../contexts/AuthContext';
-import { LoginContext } from '../contexts/LoggedInContext';
-import { database, storage } from '../config/firebase';
-import { doc, getDoc } from 'firebase/firestore';
-import { ref, getDownloadURL } from 'firebase/storage';
-import EditProfile from '../components/EditProfile';
+import { Text, View, Image } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Button, ActivityIndicator } from "react-native-paper";
+import { useAuth } from "../contexts/AuthContext";
+import { LoginContext } from "../contexts/LoggedInContext";
+import { database } from "../config/firebase";
+import { doc, getDoc } from "firebase/firestore";
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import EditProfile from "../components/EditProfile";
+import { ChatContext } from "../contexts/ChatContext";
 
-function UserProfile({ navigation }) {
+function UserProfileTest({ navigation }) {
   const [profileImgUrl, setProfileImgUrl] = useState("");
   const { currentUser, setCurrentUser } = useAuth();
   const [isLoggedIn, setIsLoggedIn] = useContext(LoginContext);
   const [userProfile, setUserProfile] = useState();
   const [isLoading, setIsLoading] = useState(true);
-  const [isEditing, setIsEditing] = useState(false);
   const [senderRecipient, setSenderRecipient] = useContext(ChatContext);
 
   async function getUserProfile(id) {
-    const docRef = doc(database, 'userProfilesV2', id);
+    const docRef = doc(database, "userProfilesV2", id);
     const docSnap = await getDoc(docRef);
     const results = docSnap.data();
     return results;
@@ -27,17 +27,17 @@ function UserProfile({ navigation }) {
 
   useEffect(() => {
     setIsLoading(true);
+    const storage = getStorage();
     const reference = ref(
       storage,
-      `users/${currentUser.uid}/userImages/userImage.jpg`
+      `users/aa7nootX3fXb6H13KcFCbCzCATM2/userImages/userImage.jpg`
     );
-
     getDownloadURL(reference)
       .then((url) => {
         setProfileImgUrl(url);
       })
       .then(() => {
-        return getUserProfile(currentUser.uid);
+        return getUserProfile("aa7nootX3fXb6H13KcFCbCzCATM2");
       })
       .then((data) => {
         setIsLoading(false);
@@ -53,25 +53,14 @@ function UserProfile({ navigation }) {
       </>
     );
   }
-
-  if (isEditing) {
-    return (
-      <EditProfile
-        isEditing={isEditing}
-        setIsEditing={setIsEditing}
-        userProfile={userProfile}
-      />
-    );
-  }
-
   if (userProfile) {
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <View
           style={{
             flex: 1,
-            justifyContent: 'space-between',
-            alignItems: 'center',
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
           <View>
@@ -89,43 +78,33 @@ function UserProfile({ navigation }) {
           </View>
           <View
             style={{
-              width: '90%',
-              flexDirection: 'row',
-              justifyContent: 'flex-end',
-              alignItems: 'center',
+              width: "90%",
+              flexDirection: "row",
+              justifyContent: "flex-end",
+              alignItems: "center",
             }}
           >
             <Button
               style={{
                 marginRight: 70,
-                width: '40%',
+                width: "40%",
               }}
               mode="contained"
               buttonColor="#39C67F"
-              onPress={() => console.log('Pressed')}
+              onPress={() => console.log("Pressed")}
             >
               List My House
-            </Button>
-            <Button
-              style={{
-                width: '40%',
-              }}
-              mode="contained"
-              buttonColor="#39C67F"
-              onPress={() => setIsEditing(true)}
-            >
-              Edit Profile
             </Button>
           </View>
           <View
             style={{
-              width: '100%',
-              flexDirection: 'row',
-              justifyContent: 'space-around',
-              alignItems: 'center',
+              width: "100%",
+              flexDirection: "row",
+              justifyContent: "space-around",
+              alignItems: "center",
             }}
           >
-            <View style={{ textAlign: 'center' }}>
+            <View style={{ textAlign: "center" }}>
               <Image
                 source={{ uri: profileImgUrl }}
                 style={{
@@ -135,30 +114,30 @@ function UserProfile({ navigation }) {
                 }}
               />
             </View>
-            <View style={{ alignItems: 'center' }}>
-              <Text>{userProfile.firstName + ' ' + userProfile.lastName}</Text>
+            <View style={{ alignItems: "center" }}>
+              <Text>{userProfile.firstName + " " + userProfile.lastName}</Text>
               <Text>{userProfile.location}</Text>
-
               <Text>{userProfile.rating + " *"}</Text>
-              {!userProfile.uid === currentUser.uid ? (
-                <Button
-                  mode="contained"
-                  buttonColor="#39C67F"
-                  onPress={() => {
-                    setSenderRecipient(currentUser.email + userProfile);
-                    navigation.navigate("Chat");
-                  }}
-                >
-                  Contact Me
-                </Button>
-              ) : null}
+              <Button
+                mode="contained"
+                buttonColor="#39C67F"
+                onPress={() => {
+                  setSenderRecipient(currentUser.uid + "-" + userProfile.uid);
+                  navigation.navigate("ChatsNav", {
+                    screen: "Chat",
+                    params: { recipient: userProfile.uid },
+                  });
+                }}
+              >
+                Contact Me
+              </Button>
             </View>
           </View>
           <View
             style={{
-              width: '90%',
+              width: "90%",
               height: 100,
-              borderWidth: '2',
+              borderWidth: "2",
               borderRadius: 10,
             }}
           >
@@ -178,9 +157,9 @@ function UserProfile({ navigation }) {
           </View>
           <View
             style={{
-              width: '90%',
+              width: "90%",
               height: 100,
-              borderWidth: '2',
+              borderWidth: "2",
               borderRadius: 10,
             }}
           >
@@ -192,4 +171,4 @@ function UserProfile({ navigation }) {
   }
 }
 
-export default UserProfile;
+export default UserProfileTest;

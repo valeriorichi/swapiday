@@ -36,9 +36,9 @@ function HomeList() {
   const [wishListArray, setWishListArray] = useState([]);
   const [userList, setUserList] = useState([{}]);
   const navigation = useNavigation();
-
+  console.log(currentUser);
   useEffect(() => {
-    const docRef = doc(database, `userProfilesV2/${currentUser.uid}`);
+    const docRef = doc(database, `userProfiles/${currentUser?.uid}`);
     getDoc(docRef)
       .then((doc) => {
         setWishListArray(doc.data().wishList);
@@ -51,7 +51,7 @@ function HomeList() {
   useEffect(() => {
     Promise.all(
       wishListArray.map((uid) => {
-        const docRef = doc(database, `userProfilesV2/${uid}`);
+        const docRef = doc(database, `userProfiles/${uid}`);
         const reference = ref(storage, `users/${uid}/houseImages`);
         return Promise.all([
           getDoc(docRef).then((doc) => doc.data({ uid, ...doc.data() })),

@@ -10,22 +10,15 @@ import {
 import { createStackNavigator } from "@react-navigation/stack";
 import { LoginContext, LoginContextProvider } from "./contexts/LoggedInContext";
 import Landing from "./screens/Landing";
-import HomeList from "./screens/HomeList";
 import AddHome from "./screens/AddHome";
-import ListingPage from "./screens/ListingPage";
-import UpdateListing from "./screens/UpdateListing";
 import LoginSignUp from "./screens/LoginSignUp";
 import UserProfile from "./screens/UserProfile";
-import Reviews from "./screens/Reviews";
-import DebugAccount from "./screens/DebugAccount";
 import Search from "./screens/Search";
 import Chats from "./screens/Chats";
 import Chat from "./screens/Chat";
-import RateForm from "./screens/RateForm";
-import ErrorPage from "./screens/ErrorPage.jsx";
 import WishList from "./screens/WishList";
 import { ChatContextProvider } from "./contexts/ChatContext";
-import UserProfileTest from "./screens/UserProfileTest";
+
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 const Tab = createBottomTabNavigator();
@@ -49,12 +42,6 @@ const ChatsNav = () => {
 const MainNavigator = () => {
   return (
     <Tab.Navigator>
-      <Tab.Screen name="Search" component={Search} />
-      <Tab.Screen name="Homes" component={HomeList} />
-      <Tab.Screen name="List a home" component={AddHome} />
-      <Tab.Screen name="ListingPage" component={ListingPage} />
-      <Tab.Screen name="UserProfile" component={UserProfile} />
-      <Tab.Screen name="UserProfileTest" component={UserProfileTest} />
       <Tab.Screen
         name="Search"
         component={Search}
@@ -108,7 +95,7 @@ const MainNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="Chats"
+        name="Chats "
         component={ChatsNav}
         options={{
           headerShown: false,

@@ -101,7 +101,7 @@ const MainNavigator = () => {
       />
 
       <Tab.Screen
-        name="Chats "
+        name="ChatsNav"
         component={ChatsNav}
         options={{
           headerShown: false,

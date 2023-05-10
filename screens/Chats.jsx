@@ -9,7 +9,7 @@ import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
 function Chats({ navigation }) {
   const [chatList, setChatList] = useState([]);
-  const { currentUser, setCurrentUser } = useAuth();
+  const { currentUser } = useAuth();
   const [senderRecipient, setSenderRecipient] = useContext(ChatContext);
   const [recipientAvatar, setRecipientAvatar] = useState();
   const [isLoading, setIsLoading] = useState();
@@ -19,13 +19,13 @@ function Chats({ navigation }) {
       getDocs(
         query(
           collection(database, "chatsTest"),
-          where("sender", "==", currentUser.email)
+          where("sender", "==", currentUser.uid)
         )
       ),
       getDocs(
         query(
           collection(database, "chatsTest"),
-          where("recipient", "==", currentUser.email)
+          where("recipient", "==", currentUser.uid)
         )
       ),
     ]);
@@ -87,7 +87,12 @@ function Chats({ navigation }) {
             key={i}
             onPress={() => {
               setSenderRecipient(item.docId);
-              navigation.navigate("Chat");
+              navigation.navigate("Chat", {
+                params: {
+                  sender: item.docSender,
+                  recipient: item.docRecipient,
+                },
+              });
             }}
             left={(props) => (
               <List.Icon

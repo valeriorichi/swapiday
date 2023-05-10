@@ -1,14 +1,13 @@
-import { Text, View, Image } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Button, ActivityIndicator } from "react-native-paper";
-import { useAuth } from "../contexts/AuthContext";
-import { LoginContext } from "../contexts/LoggedInContext";
-import { database } from "../config/firebase";
-import { doc, getDoc } from "firebase/firestore";
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
-import EditProfile from "../components/EditProfile";
-import { ChatContext } from "../contexts/ChatContext";
+import { Text, View, Image } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Button, ActivityIndicator } from 'react-native-paper';
+import { useAuth } from '../contexts/AuthContext';
+import { LoginContext } from '../contexts/LoggedInContext';
+import { database, storage } from '../config/firebase';
+import { doc, getDoc } from 'firebase/firestore';
+import { ref, getDownloadURL } from 'firebase/storage';
+import EditProfile from '../components/EditProfile';
 
 function UserProfile({ navigation }) {
   const [profileImgUrl, setProfileImgUrl] = useState("");
@@ -20,7 +19,7 @@ function UserProfile({ navigation }) {
   const [senderRecipient, setSenderRecipient] = useContext(ChatContext);
 
   async function getUserProfile(id) {
-    const docRef = doc(database, "userProfilesV2", id);
+    const docRef = doc(database, 'userProfilesV2', id);
     const docSnap = await getDoc(docRef);
     const results = docSnap.data();
     return results;
@@ -28,11 +27,11 @@ function UserProfile({ navigation }) {
 
   useEffect(() => {
     setIsLoading(true);
-    const storage = getStorage();
     const reference = ref(
       storage,
       `users/${currentUser.uid}/userImages/userImage.jpg`
     );
+
     getDownloadURL(reference)
       .then((url) => {
         setProfileImgUrl(url);
@@ -56,7 +55,13 @@ function UserProfile({ navigation }) {
   }
 
   if (isEditing) {
-    return <EditProfile userProfile={userProfile} />;
+    return (
+      <EditProfile
+        isEditing={isEditing}
+        setIsEditing={setIsEditing}
+        userProfile={userProfile}
+      />
+    );
   }
 
   if (userProfile) {
@@ -65,8 +70,8 @@ function UserProfile({ navigation }) {
         <View
           style={{
             flex: 1,
-            justifyContent: "space-between",
-            alignItems: "center",
+            justifyContent: 'space-between',
+            alignItems: 'center',
           }}
         >
           <View>
@@ -84,26 +89,26 @@ function UserProfile({ navigation }) {
           </View>
           <View
             style={{
-              width: "90%",
-              flexDirection: "row",
-              justifyContent: "flex-end",
-              alignItems: "center",
+              width: '90%',
+              flexDirection: 'row',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
             }}
           >
             <Button
               style={{
                 marginRight: 70,
-                width: "40%",
+                width: '40%',
               }}
               mode="contained"
               buttonColor="#39C67F"
-              onPress={() => console.log("Pressed")}
+              onPress={() => console.log('Pressed')}
             >
               List My House
             </Button>
             <Button
               style={{
-                width: "40%",
+                width: '40%',
               }}
               mode="contained"
               buttonColor="#39C67F"
@@ -114,13 +119,13 @@ function UserProfile({ navigation }) {
           </View>
           <View
             style={{
-              width: "100%",
-              flexDirection: "row",
-              justifyContent: "space-around",
-              alignItems: "center",
+              width: '100%',
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+              alignItems: 'center',
             }}
           >
-            <View style={{ textAlign: "center" }}>
+            <View style={{ textAlign: 'center' }}>
               <Image
                 source={{ uri: profileImgUrl }}
                 style={{
@@ -130,9 +135,10 @@ function UserProfile({ navigation }) {
                 }}
               />
             </View>
-            <View style={{ alignItems: "center" }}>
-              <Text>{userProfile.firstName + " " + userProfile.lastName}</Text>
+            <View style={{ alignItems: 'center' }}>
+              <Text>{userProfile.firstName + ' ' + userProfile.lastName}</Text>
               <Text>{userProfile.location}</Text>
+
               <Text>{userProfile.rating + " *"}</Text>
               {!userProfile.uid === currentUser.uid ? (
                 <Button
@@ -150,9 +156,9 @@ function UserProfile({ navigation }) {
           </View>
           <View
             style={{
-              width: "90%",
+              width: '90%',
               height: 100,
-              borderWidth: "2",
+              borderWidth: '2',
               borderRadius: 10,
             }}
           >
@@ -172,9 +178,9 @@ function UserProfile({ navigation }) {
           </View>
           <View
             style={{
-              width: "90%",
+              width: '90%',
               height: 100,
-              borderWidth: "2",
+              borderWidth: '2',
               borderRadius: 10,
             }}
           >

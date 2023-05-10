@@ -12,33 +12,33 @@ import {
   Modal,
   TouchableOpacity,
   Linking,
-} from "react-native";
-import React, { useContext, useEffect, useState } from "react";
-import LogoHeader from "./LogoHeader";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
-import MapView from "react-native-maps";
-import Geocoding from "react-native-geocoding";
-import { Marker } from "react-native-maps";
-import Swiper from "react-native-swiper";
-import { useAuth } from "../contexts/AuthContext";
-import { database } from "../config/firebase";
+} from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import LogoHeader from './LogoHeader';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import MapView from 'react-native-maps';
+import Geocoding from 'react-native-geocoding';
+import { Marker } from 'react-native-maps';
+import Swiper from 'react-native-swiper';
+import { useAuth } from '../contexts/AuthContext';
+import { database, storage } from '../config/firebase';
 import {
   doc,
   getDoc,
   updateDoc,
   FieldValue,
   arrayUnion,
-} from "firebase/firestore";
-import { getStorage, ref, getDownloadURL, listAll } from "firebase/storage";
-import GOOGLE_API_KEY from "../google_api_key";
-import testedUser from "../temp";
-import ErrorPage from "./ErrorPage";
-import { useRoute } from "@react-navigation/native";
+} from 'firebase/firestore';
+import { ref, getDownloadURL, listAll } from 'firebase/storage';
+import GOOGLE_API_KEY from '../google_api_key';
+import testedUser from '../temp';
+import ErrorPage from './ErrorPage';
+import { useRoute } from '@react-navigation/native';
 
-const chatButton = require("../assets/chatButton.png");
-const wishlistButton = require("../assets/wishlistButton.png");
-const yellowStar = require("../assets/yellowStar.png");
+const chatButton = require('../assets/chatButton.png');
+const wishlistButton = require('../assets/wishlistButton.png');
+const yellowStar = require('../assets/yellowStar.png');
 
 Geocoding.init(GOOGLE_API_KEY);
 // remove "= DNuWaXM85COmHYtIXBnys2vRQxu2" from below
@@ -55,7 +55,7 @@ function ListingPage() {
   } else {
     searchedUserUid = route.params.searchedUserUid;
   }
-  const [address, setAddress] = useState("");
+  const [address, setAddress] = useState('');
   const [mapPosition, setMapPosition] = useState({
     latitude: 51.507359,
     longitude: -0.136439,
@@ -69,20 +69,19 @@ function ListingPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [images, setImages] = useState([]);
 
-  const [location, setLocation] = useState("");
-  const [houseHeaderInfo, setHouseHeaderInfo] = useState("");
-  const [houseInfo, setHouseInfo] = useState("");
+  const [location, setLocation] = useState('');
+  const [houseHeaderInfo, setHouseHeaderInfo] = useState('');
+  const [houseInfo, setHouseInfo] = useState('');
   const navigation = useNavigation();
-  const [reviewsField, setReviewsField] = useState("");
-  const [commentsField, setCommentsField] = useState("");
+  const [reviewsField, setReviewsField] = useState('');
+  const [commentsField, setCommentsField] = useState('');
   const [availableDates, setAvailableDates] = useState([]);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("[]");
-  const [userImage, setUserImage] = useState("");
-  const [typeAndBedrooms, setTypeAndBedrooms] = useState("");
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('[]');
+  const [userImage, setUserImage] = useState('');
+  const [typeAndBedrooms, setTypeAndBedrooms] = useState('');
   useEffect(() => {
     setIsLoading(true);
-    const storage = getStorage();
     const listReference = ref(storage, `users/${searchedUserUid}/houseImages`);
     listAll(listReference)
       .then((res) => {
@@ -171,28 +170,29 @@ function ListingPage() {
       wishList: arrayUnion(searchedUserUid),
     })
       .then(() => {
-        alert("Added to WishList");
+        alert('Added to WishList');
         setToWishlist(true);
       })
       .catch((error) => {
-        console.error("Error updating document: ", error);
+        console.error('Error updating document: ', error);
       });
-    navigation.navigate("Wishlist", { searchedUserUid: searchedUserUid });
+    navigation.navigate('Wishlist', { searchedUserUid: searchedUserUid });
   };
 
   const goToChat = () => {
+
     alert("Redirecting to ChatsPage");
     navigation.navigate("Chats", { searchedUserUid: searchedUserUid });
   };
 
   const goToReviewsPage = () => {
-    alert("Redirecting to Reviews andComment Page");
-    navigation.navigate("Reviews", { searchedUserUid: searchedUserUid });
+    alert('Redirecting to Reviews andComment Page');
+    navigation.navigate('Reviews', { searchedUserUid: searchedUserUid });
   };
 
   const goToUserProfile = () => {
-    alert("Redirecting to User Profile");
-    navigation.navigate("UserProfile", { searchedUserUid: searchedUserUid });
+    alert('Redirecting to User Profile');
+    navigation.navigate('UserProfile', { searchedUserUid: searchedUserUid });
   };
 
   const addBooking = () => {
@@ -205,10 +205,10 @@ function ListingPage() {
     ])
       .then(() => {
         setIsReserved(true);
-        alert("Booked");
+        alert('Booked');
       })
       .catch((error) => {
-        console.error("Error updating document: ", error);
+        console.error('Error updating document: ', error);
       });
   };
 
@@ -245,30 +245,30 @@ function ListingPage() {
           onPress={addToWishlist}
         >
           <Image
-            source={require("../assets/../assets/wishlistButton.png")}
+            source={require('../assets/../assets/wishlistButton.png')}
             style={styles.icons}
           />
-          <Text style={styles.iconText}>Add in{"\n"}Wishlist</Text>
+          <Text style={styles.iconText}>Add in{'\n'}Wishlist</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.icons} onPress={goToChat}>
           <Image
-            source={require("../assets/chatButton.png")}
+            source={require('../assets/chatButton.png')}
             style={styles.icons}
           />
-          <Text style={styles.iconText}>Contact{"\n"}host</Text>
+          <Text style={styles.iconText}>Contact{'\n'}host</Text>
         </TouchableOpacity>
         <View style={styles.commentContainer}>
           <TouchableOpacity style={styles.icons} onPress={goToReviewsPage}>
             <View style={styles.ratingContainer}>
               <Image
-                source={require("../assets/yellowStar.png")}
+                source={require('../assets/yellowStar.png')}
                 style={[styles.icons, { marginLeft: -12 }]}
               />
               <Text style={[styles.iconText, { fontSize: 24 }]}>
                 {reviewsField}
               </Text>
             </View>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text style={[styles.iconText, { fontSize: 24 }]}>
                 {commentsField}
               </Text>
@@ -313,14 +313,14 @@ function ListingPage() {
       <View style={styles.availableDatesContainer}>
         {availableDates.map((date, index) => (
           <Text key={index} style={styles.datesText}>
-            {date.from.toDate().toLocaleDateString()} -{" "}
+            {date.from.toDate().toLocaleDateString()} -{' '}
             {date.to.toDate().toLocaleDateString()}
           </Text>
         ))}
       </View>
       <Text style={styles.header}>About host</Text>
       <TouchableOpacity onPress={goToUserProfile}>
-        <Text style={styles.userName}>{firstName + " " + lastName}</Text>
+        <Text style={styles.userName}>{firstName + ' ' + lastName}</Text>
         <View style={styles.mapAndImageContainer}>
           <Image source={{ uri: userImage }} style={styles.userImage} />
         </View>
@@ -339,80 +339,80 @@ function ListingPage() {
     </ScrollView>
   );
 }
-const { width } = Dimensions.get("window");
+const { width } = Dimensions.get('window');
 const imageHeight = width * 0.8;
 
 const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: '#ddd',
     padding: 10,
     marginBottom: 10,
   },
   mapAndImageContainer: {
     borderWidth: 4,
     borderRadius: 5,
-    borderColor: "#39C67F",
-    width: "90%",
+    borderColor: '#39C67F',
+    width: '90%',
     aspectRatio: 1.25,
-    alignSelf: "center",
-    justifyContent: "center",
+    alignSelf: 'center',
+    justifyContent: 'center',
     marginBottom: 5,
   },
   map: {
     flex: 1,
   },
   image: {
-    width: "100%",
+    width: '100%',
     height: imageHeight,
-    resizeMode: "contain",
-    alignSelf: "center",
-    justifyContent: "center", // Add this line
-    maxHeight: Dimensions.get("window").width * 0.9 * 0.8, // Add this line
+    resizeMode: 'contain',
+    alignSelf: 'center',
+    justifyContent: 'center', // Add this line
+    maxHeight: Dimensions.get('window').width * 0.9 * 0.8, // Add this line
   },
   button: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 1,
     right: 1,
-    backgroundColor: "#39C67F",
+    backgroundColor: '#39C67F',
     padding: 2,
     borderRadius: 8,
   },
   buttonText: {
-    color: "#fff",
-    fontWeight: "bold",
-    textAlign: "center",
+    color: '#fff',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   header: {
-    justifyContent: "center",
-    textAlign: "center",
+    justifyContent: 'center',
+    textAlign: 'center',
     fontSize: 24,
-    fontWeight: "bold",
-    color: "#39C67F",
+    fontWeight: 'bold',
+    color: '#39C67F',
     marginTop: 20,
     marginBottom: 20,
-    textShadowColor: "#1c633f",
+    textShadowColor: '#1c633f',
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 8,
   },
   logoHeader: {
     paddingTop: 5,
     paddingBottom: 5,
-    width: "100%",
-    resizeMode: "contain",
-    alignSelf: "center",
-    justifyContent: "center",
+    width: '100%',
+    resizeMode: 'contain',
+    alignSelf: 'center',
+    justifyContent: 'center',
     marginTop: 20,
     marginBottom: 20,
   },
   iconsContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    width: "100%",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    justifyContent: 'space-between',
     paddingHorizontal: 10,
     marginLeft: 10,
-    marginRight: "10%",
+    marginRight: '10%',
     marginTop: 15,
     marginBottom: 50,
   },
@@ -421,37 +421,37 @@ const styles = StyleSheet.create({
     height: 50,
   },
   iconText: {
-    textAlign: "center",
-    color: "#39C67F",
-    textShadowColor: "#1c633f",
+    textAlign: 'center',
+    color: '#39C67F',
+    textShadowColor: '#1c633f',
     textShadowOffset: { width: 0.5, height: 0.5 },
     textShadowRadius: 1,
   },
   ratingContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   commentContainer: {
-    flexDirection: "column",
-    alignItems: "flex-start",
+    flexDirection: 'column',
+    alignItems: 'flex-start',
     marginRight: 10,
-    width: "30%",
+    width: '30%',
   },
   availableDatesContainer: {
     borderWidth: 4,
     borderRadius: 5,
-    borderColor: "#39C67F",
-    width: "90%",
-    alignSelf: "center",
-    justifyContent: "center",
+    borderColor: '#39C67F',
+    width: '90%',
+    alignSelf: 'center',
+    justifyContent: 'center',
     marginBottom: 5,
   },
   datesText: {
     fontSize: 18,
-    textAlign: "center",
-    color: "#39C67F",
-    textShadowColor: "#1c633f",
+    textAlign: 'center',
+    color: '#39C67F',
+    textShadowColor: '#1c633f',
     textShadowOffset: { width: 0.5, height: 0.5 },
     textShadowRadius: 1,
   },
@@ -460,81 +460,81 @@ const styles = StyleSheet.create({
     height: 200,
     borderRadius: 50,
     borderWidth: 2,
-    borderColor: "#39C67F",
-    overflow: "hidden",
+    borderColor: '#39C67F',
+    overflow: 'hidden',
   },
   userImage: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover",
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
   },
   userName: {
-    justifyContent: "center",
-    textAlign: "center",
+    justifyContent: 'center',
+    textAlign: 'center',
     fontSize: 20,
-    fontWeight: "bold",
-    color: "#39C67F",
+    fontWeight: 'bold',
+    color: '#39C67F',
     marginTop: -10,
     marginBottom: 5,
-    textShadowColor: "#1c633f",
+    textShadowColor: '#1c633f',
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 8,
   },
   typeAndBedrooms: {
-    justifyContent: "center",
-    textAlign: "left",
+    justifyContent: 'center',
+    textAlign: 'left',
     fontSize: 20,
-    fontWeight: "bold",
-    color: "#39C67F",
+    fontWeight: 'bold',
+    color: '#39C67F',
     marginTop: -5,
     marginBottom: -5,
     marginLeft: 20,
-    textShadowColor: "#1c633f",
+    textShadowColor: '#1c633f',
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 8,
   },
   userLocation: {
-    justifyContent: "center",
-    textAlign: "center",
+    justifyContent: 'center',
+    textAlign: 'center',
     fontSize: 20,
-    fontWeight: "bold",
-    color: "#39C67F",
+    fontWeight: 'bold',
+    color: '#39C67F',
     marginTop: -10,
     marginBottom: 5,
-    textShadowColor: "#1c633f",
+    textShadowColor: '#1c633f',
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 8,
   },
   userComments: {
-    justifyContent: "center",
-    textAlign: "center",
+    justifyContent: 'center',
+    textAlign: 'center',
     fontSize: 24,
-    fontWeight: "bold",
-    color: "#39C67F",
+    fontWeight: 'bold',
+    color: '#39C67F',
     marginTop: 20,
     marginBottom: 20,
-    textShadowColor: "#1c633f",
+    textShadowColor: '#1c633f',
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 8,
   },
   reserveButton: {
     width: 100,
     height: 50,
-    backgroundColor: "#DAEBDD",
+    backgroundColor: '#DAEBDD',
     borderRadius: 12.5,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     borderWidth: 4,
-    borderColor: "#39C67F",
-    alignSelf: "flex-end",
+    borderColor: '#39C67F',
+    alignSelf: 'flex-end',
     marginRight: 20,
     marginBottom: 5,
   },
   reserveButtonText: {
     fontSize: 18,
-    textAlign: "center",
-    color: "#39C67F",
-    textShadowColor: "#1c633f",
+    textAlign: 'center',
+    color: '#39C67F',
+    textShadowColor: '#1c633f',
     textShadowOffset: { width: 1, height: 2 },
     textShadowRadius: 1,
   },

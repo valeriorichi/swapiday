@@ -18,7 +18,7 @@ import Chats from "./screens/Chats";
 import Chat from "./screens/Chat";
 import WishList from "./screens/WishList";
 import { ChatContextProvider } from "./contexts/ChatContext";
-
+import Reviews from "./screens/Reviews";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import ListingPage from "./screens/ListingPage";
 import CommentsList from "./screens/CommentsList";
@@ -58,6 +58,8 @@ const MyStack = () => {
 const MainNavigator = () => {
   return (
     <Tab.Navigator>
+      <Tab.Screen name="reviews" component={Reviews} />
+
       <Tab.Screen
         name="Search"
         component={Search}

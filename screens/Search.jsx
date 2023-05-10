@@ -34,11 +34,15 @@ import {
   query,
   userProfilesCollection,
   where,
-} from 'firebase/firestore';
-import { getStorage, ref, getDownloadURL, listAll } from 'firebase/storage';
-import { database, auth } from '../config/firebase';
-import 'firebase/firestore';
-import HomeCard from '../components/HomeCard';
+  get,
+} from "firebase/firestore";
+import { getStorage, ref, getDownloadURL, listAll } from "firebase/storage";
+import { database, auth } from "../config/firebase";
+import "firebase/firestore";
+import HomeCard from "../components/HomeCard";
+import { useAuth } from "../contexts/AuthContext";
+import { useRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 
 function Search() {
   const [searchQuery, setSearchQuery] = React.useState('');
@@ -48,24 +52,107 @@ function Search() {
   const [checkoutDate, setCheckoutDate] = useState(new Date());
   const [isSearching, setIsSearching] = useState(false);
   const [allListArray, setAllListArray] = useState([]);
-  const onChangeSearch = (query) => setSearchQuery(query);
+  const [listAvailableHomes, setListAvailableHomes] = useState([]);
+  const [listUnavailableHomes, setListUnavailableHomes] = useState([]);
 
+  const { currentUser, setCurrentUser } = useAuth();
+  const [userList, setUserList] = useState([{}]);
+  const onChangeSearch = (query) => setSearchQuery(query);
+  const navigation = useNavigation();
+  //console.log("currentUser", currentUser.uid);
   //const docRef = doc(database, `userProfiles`);
+  //console.log(searchQuery, checkinDate, checkoutDate);
   useEffect(() => {
     const usersCollection = collection(database, 'userProfiles');
     getDocs(usersCollection)
       .then((querySnapshot) => {
-        const usersList = querySnapshot.docs.map((doc) => doc.data());
-        setAllListArray(usersList);
+        querySnapshot.forEach((doc) => {
+          const ids = querySnapshot.docs.map((doc) => doc.id);
+          setAllListArray(
+            ids.filter((userUid) => userUid !== currentUser?.uid)
+          );
+        });
       })
       .catch((error) => {
         console.error(error);
       });
   }, []);
+
+  useEffect(() => {
+    const storage = getStorage();
+    Promise.all(
+      allListArray.map((uid) => {
+        const docRef = doc(database, `userProfiles/${uid}`);
+        const reference = ref(storage, `users/${uid}/houseImages`);
+        return Promise.all([
+          getDoc(docRef).then((doc) => doc.data({ uid, ...doc.data() })),
+          listAll(reference).then((result) =>
+            result.items.length > 0 ? getDownloadURL(result.items[0]) : null
+          ),
+        ]).then(([userData, imageUrl]) => {
+          const commentsCount = userData.comments.length;
+          const rating = (
+            userData.reviews.reduce(
+              (total, review) => total + parseFloat(review),
+              0
+            ) / userData.reviews.length
+          ).toFixed(1);
+          return {
+            ...userData,
+            uid,
+            imageUrl,
+            commentsCount,
+            rating,
+          };
+        });
+      })
+    )
+      .then((users) => {
+        setUserList(users);
+        const matchingHomes = users.filter((home) =>
+          home.houseLocation?.toLowerCase().includes(searchQuery?.toLowerCase())
+        );
+
+        const availableHomes = [];
+        const unavailableHomes = [];
+
+        matchingHomes.forEach((home) => {
+          if (home.isAvailable) {
+            availableHomes.push(home);
+          } else {
+            unavailableHomes.push(home);
+          }
+        });
+
+        setListAvailableHomes(availableHomes);
+        setListUnavailableHomes(unavailableHomes);
+      })
+
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [allListArray, isSearching]);
+
   function handleSearchPress() {
     setIsSearching(true);
     // Perform search logic here
   }
+
+  console.log("all", allListArray);
+  console.log("unav", listUnavailableHomes);
+  console.log("av", listAvailableHomes);
+  const goToListingPage = (userHomeUid) => {
+    console.log(userHomeUid);
+    alert("Redirecting to ListingPage");
+    navigation.navigate("ListingPage", {
+      screen: "ListingPage",
+      params: {
+        searchedUserUid: userHomeUid,
+        fromWishList: false,
+      },
+    });
+  };
+
   if (isSearching) {
     return (
       <>
@@ -154,7 +241,9 @@ function Search() {
               icon="magnify"
               mode="contained"
               backgroundColor="#39C67F"
-              onPress={() => setIsSearching(false)}
+              onPress={() => {
+                setIsSearching(false);
+              }}
               style={styles.searchButton}
               labelStyle={{ fontWeight: 'bold' }}
             >
@@ -187,13 +276,13 @@ function Search() {
             flexWrap: 'wrap',
           }}
         >
-          {allListArray.map((userHome, index) => (
+          {userList.map((userHome, index) => (
             <>
               <HomeCard key={index} home={userHome}>
                 <HomeCard.Image />
                 <View style={styles.removeButtonContainer}>
                   <TouchableOpacity
-                    onPress={() => goToListingPage(userHome.uid)}
+                    onPress={() => goToListingPage(navigation, userHome.uid)}
                     style={styles.button}
                   >
                     <Text style={styles.buttonText}>House info</Text>
@@ -298,6 +387,23 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 1, height: 2 },
     textShadowRadius: 1,
     marginTop: -15,
+  },
+  removeButtonContainer: {
+    position: "absolute",
+    width: 100,
+    bottom: 55,
+    right: 10,
+    marginRight: 15,
+    borderRadius: 30,
+    backgroundColor: "rgba(57,198,127,0.5)",
+  },
+  button: {
+    padding: 1,
+  },
+  buttonText: {
+    color: "#fff",
+    fontWeight: "bold",
+    textAlign: "center",
   },
 });
 

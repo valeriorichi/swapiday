@@ -36,7 +36,6 @@ function HomeList() {
   const [wishListArray, setWishListArray] = useState([]);
   const [userList, setUserList] = useState([{}]);
   const navigation = useNavigation();
-  console.log(currentUser);
   useEffect(() => {
     const docRef = doc(database, `userProfiles/${currentUser?.uid}`);
     getDoc(docRef)
@@ -140,9 +139,6 @@ const styles = StyleSheet.create({
     color: '#39C67F',
     marginTop: 20,
     marginBottom: 20,
-    textShadowColor: '#1c633f',
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 8,
   },
   removeButtonContainer: {
     position: 'absolute',

@@ -180,9 +180,8 @@ function ListingPage() {
   };
 
   const goToChat = () => {
-
-    alert("Redirecting to ChatsPage");
-    navigation.navigate("Chats", { searchedUserUid: searchedUserUid });
+    alert('Redirecting to ChatsPage');
+    navigation.navigate('Chats', { searchedUserUid: searchedUserUid });
   };
 
   const goToReviewsPage = () => {
@@ -391,9 +390,6 @@ const styles = StyleSheet.create({
     color: '#39C67F',
     marginTop: 20,
     marginBottom: 20,
-    textShadowColor: '#1c633f',
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 8,
   },
   logoHeader: {
     paddingTop: 5,
@@ -423,9 +419,6 @@ const styles = StyleSheet.create({
   iconText: {
     textAlign: 'center',
     color: '#39C67F',
-    textShadowColor: '#1c633f',
-    textShadowOffset: { width: 0.5, height: 0.5 },
-    textShadowRadius: 1,
   },
   ratingContainer: {
     flexDirection: 'row',
@@ -451,9 +444,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'center',
     color: '#39C67F',
-    textShadowColor: '#1c633f',
-    textShadowOffset: { width: 0.5, height: 0.5 },
-    textShadowRadius: 1,
   },
   userImageContainer: {
     width: 200,
@@ -476,9 +466,6 @@ const styles = StyleSheet.create({
     color: '#39C67F',
     marginTop: -10,
     marginBottom: 5,
-    textShadowColor: '#1c633f',
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 8,
   },
   typeAndBedrooms: {
     justifyContent: 'center',
@@ -489,9 +476,6 @@ const styles = StyleSheet.create({
     marginTop: -5,
     marginBottom: -5,
     marginLeft: 20,
-    textShadowColor: '#1c633f',
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 8,
   },
   userLocation: {
     justifyContent: 'center',
@@ -501,9 +485,6 @@ const styles = StyleSheet.create({
     color: '#39C67F',
     marginTop: -10,
     marginBottom: 5,
-    textShadowColor: '#1c633f',
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 8,
   },
   userComments: {
     justifyContent: 'center',
@@ -513,9 +494,6 @@ const styles = StyleSheet.create({
     color: '#39C67F',
     marginTop: 20,
     marginBottom: 20,
-    textShadowColor: '#1c633f',
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 8,
   },
   reserveButton: {
     width: 100,
@@ -534,9 +512,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'center',
     color: '#39C67F',
-    textShadowColor: '#1c633f',
-    textShadowOffset: { width: 1, height: 2 },
-    textShadowRadius: 1,
   },
 });
 

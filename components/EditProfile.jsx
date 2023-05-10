@@ -75,16 +75,13 @@ function EditProfile({ userProfile, setIsEditing, isEditing }) {
           }
         },
         () => {
-          // Upload completed successfully, now we can get the download URL
           getDownloadURL(uploadTask).then((url) => {
             //update profile with image url
             const docRef = doc(database, 'userProfilesV2', currentUser.uid);
             updateDoc(docRef, { profileImgUrl: url })
               .then(() => {
                 alert('Image uploaded!');
-                // setIsLoggedIn(true);
                 setIsLoading(false);
-                // setIsEditing(false);
               })
               .catch((err) => {
                 alert(`Error saving changes: ${err}`);

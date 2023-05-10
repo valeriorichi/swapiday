@@ -77,16 +77,12 @@ function AddHome({ setAddingHome }) {
           }
         },
         () => {
-          // Upload completed successfully, now we can get the download URL
           getDownloadURL(uploadTask).then((url) => {
-            //update profile with image url
             const docRef = doc(database, 'userProfilesV2', currentUser.uid);
             updateDoc(docRef, { houseImgUrl: url })
               .then(() => {
                 alert('Image uploaded!');
-                // setIsLoggedIn(true);
                 setIsLoading(false);
-                // setIsEditing(false);
               })
               .catch((err) => {
                 alert(`Error saving changes: ${err}`);
@@ -108,7 +104,7 @@ function AddHome({ setAddingHome }) {
       allowsEditing: false,
       aspect: [4, 4],
       quality: 1,
-      allowsMultipleSelection: true,
+      allowsMultipleSelection: false,
     });
     if (!result.canceled) {
       setHouseImg(result.assets[0].uri);
@@ -177,6 +173,7 @@ function AddHome({ setAddingHome }) {
           alignSelf: 'center',
         }}
         compact={true}
+        loading={isLoading}
         mode="contained"
         onPress={() => {
           handleImageSelection();
@@ -191,7 +188,7 @@ function AddHome({ setAddingHome }) {
           width: 150,
           alignSelf: 'center',
         }}
-        loading={isLoading}
+        disabled={isLoading}
         compact={true}
         mode="contained"
         onPress={() => {

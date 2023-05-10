@@ -17,7 +17,7 @@ import Chats from './screens/Chats';
 import Chat from './screens/Chat';
 import WishList from './screens/WishList';
 import { ChatContextProvider } from './contexts/ChatContext';
-import Reviews from "./screens/Reviews";
+import Reviews from './screens/Reviews';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ListingPage from './screens/ListingPage';
@@ -63,6 +63,7 @@ const MainNavigator = () => {
         name="Search"
         component={MyStack}
         options={{
+          headerShown: false,
           tabBarIcon: () => (
             <Icon name="home-search" size={30} color="#16a34a" />
           ),

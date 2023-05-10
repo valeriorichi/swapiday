@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback, useContext } from "react";
-import { GiftedChat } from "react-native-gifted-chat";
+import React, { useState, useEffect, useCallback, useContext } from 'react';
+import { GiftedChat } from 'react-native-gifted-chat';
 import {
   collection,
   addDoc,
@@ -9,9 +9,9 @@ import {
   setDoc,
   doc,
   getDoc,
-} from "firebase/firestore";
-import avatar from "../imagesTemp/avatar.png";
-import { auth, database } from "../config/firebase";
+} from 'firebase/firestore';
+import avatar from '../imagesTemp/avatar.png';
+import { auth, database } from '../config/firebase';
 
 function Chat({ route }) {
   const [messages, setMessages] = useState([]);
@@ -20,12 +20,11 @@ function Chat({ route }) {
   useEffect(() => {
     const docRef = doc(
       database,
-      "chatsTest",
-      route.params.sender + "-" + route.params.recipient
+      'chatsTest',
+      route.params.sender + '-' + route.params.recipient
     );
     getDoc(docRef)
       .then((doc) => {
-        console.log(route.params.sender + "-" + route.params.recipient);
         setChat(doc);
         return doc;
       })
@@ -34,12 +33,12 @@ function Chat({ route }) {
           setDoc(
             doc(
               database,
-              "chatsTest",
-              route.params.sender + "-" + route.params.recipient
+              'chatsTest',
+              route.params.sender + '-' + route.params.recipient
             ),
             {
               senderRecipient:
-                route.params.sender + "-" + route.params.recipient,
+                route.params.sender + '-' + route.params.recipient,
               sender: route.params.sender,
               recipient: route.params.recipient,
             }
@@ -51,11 +50,11 @@ function Chat({ route }) {
   useEffect(() => {
     const collectionRef = collection(
       database,
-      "chatsTest",
-      route.params.sender + "-" + route.params.recipient,
-      "messages"
+      'chatsTest',
+      route.params.sender + '-' + route.params.recipient,
+      'messages'
     );
-    const q = query(collectionRef, orderBy("createdAt", "desc"));
+    const q = query(collectionRef, orderBy('createdAt', 'desc'));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       setMessages(
         querySnapshot.docs.map((doc) => ({
@@ -78,9 +77,9 @@ function Chat({ route }) {
     addDoc(
       collection(
         database,
-        "chatsTest",
-        route.params.sender + "-" + route.params.recipient,
-        "messages"
+        'chatsTest',
+        route.params.sender + '-' + route.params.recipient,
+        'messages'
       ),
       {
         _id,

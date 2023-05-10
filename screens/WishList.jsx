@@ -88,7 +88,6 @@ function WishList() {
   const removeItem = (userHomeUid) => {
     const docRef = doc(database, `userProfiles/${currentUser.uid}`);
     const updatedWishList = wishListArray.filter((uid) => uid !== userHomeUid);
-    console.log(updatedWishList);
     updateDoc(docRef, {
       wishList: updatedWishList,
     })
@@ -102,10 +101,8 @@ function WishList() {
   };
 
   const goToListingPage = (userHomeUid) => {
-    console.log(userHomeUid);
-
-    alert("Redirecting to ListingPage");
-    navigation.navigate("ListingPage", {
+    alert('Redirecting to ListingPage');
+    navigation.navigate('ListingPage', {
       searchedUserUid: userHomeUid,
       fromWishList: true,
     });
@@ -170,9 +167,6 @@ const styles = StyleSheet.create({
     color: '#39C67F',
     marginTop: 20,
     marginBottom: 20,
-    textShadowColor: '#1c633f',
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 8,
   },
   removeButtonContainer: {
     position: 'absolute',

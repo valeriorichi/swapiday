@@ -1,6 +1,6 @@
-import React from "react";
-import { StyleSheet, View, Text, Image, ScrollView } from "react-native";
-import LogoHeader from "./LogoHeader";
+import React from 'react';
+import { StyleSheet, View, Text, Image, ScrollView } from 'react-native';
+import LogoHeader from './LogoHeader';
 
 function ErrorPage({ message }) {
   return (
@@ -8,12 +8,12 @@ function ErrorPage({ message }) {
       <LogoHeader style={styles.logoHeader} />
       <View style={styles.container}>
         <Text style={styles.errorMsg}>
-          {message?.msg || message || "Oops!\nSomething went wrong!"}
+          {message?.msg || message || 'Oops!\nSomething went wrong!'}
         </Text>
         <Image
           style={styles.errorImg}
           source={{
-            uri: "https://media.tenor.com/IQZucbKf9isAAAAC/mimi-neko-its-ok.gif",
+            uri: 'https://media.tenor.com/IQZucbKf9isAAAAC/mimi-neko-its-ok.gif',
           }}
         />
       </View>
@@ -24,18 +24,15 @@ function ErrorPage({ message }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     marginTop: 50,
   },
   errorMsg: {
     fontSize: 30,
-    textAlign: "center",
-    color: "red",
+    textAlign: 'center',
+    color: 'red',
     marginBottom: 20,
-    textShadowColor: "#1c633f",
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 8,
   },
   errorImg: {
     width: 350,

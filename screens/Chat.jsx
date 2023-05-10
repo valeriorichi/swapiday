@@ -13,31 +13,20 @@ import {
 import avatar from "../imagesTemp/avatar.png";
 import { auth, database } from "../config/firebase";
 import { ChatContext } from "../contexts/ChatContext";
-import { useRoute } from "@react-navigation/native"; // added by Val
 
-function Chat({ navigation }) {
+function Chat({ route }) {
   const [messages, setMessages] = useState([]);
   const [senderRecipient, setSenderRecipient] = useContext(ChatContext);
-  //This will be set using profile page.
-  const [recipient, setRecipient] = useState();
-
-  // const route = useRoute(); //added by Val
-  // const { searchedUserUid } = route.params; //added by Val
 
   async function getDocument() {
     const docRef = doc(database, "chatsTest", senderRecipient);
     const docSnap = await getDoc(docRef);
+    setSenderRecipient(auth.currentUser.uid + "-" + route.params.recipient);
     return docSnap;
   }
 
   useEffect(() => {
-    const collectionRef = collection(
-      database,
-      "chatsTest",
-      senderRecipient,
-      "messages"
-    );
-
+    const collectionRef = collection(database, "chatsTest", "lol", "messages");
     const q = query(collectionRef, orderBy("createdAt", "desc"));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       setMessages(
@@ -64,7 +53,7 @@ function Chat({ navigation }) {
         setDoc(doc(database, "chatsTest", senderRecipient), {
           senderRecipient,
           sender: user._id,
-          recipient,
+          recipient: route.params.recipient,
         });
       }
     });

@@ -25,6 +25,7 @@ import RateForm from "./screens/RateForm";
 import ErrorPage from "./screens/ErrorPage.jsx";
 import WishList from "./screens/WishList";
 import { ChatContextProvider } from "./contexts/ChatContext";
+import UserProfileTest from "./screens/UserProfileTest";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 const Tab = createBottomTabNavigator();
@@ -48,6 +49,12 @@ const ChatsNav = () => {
 const MainNavigator = () => {
   return (
     <Tab.Navigator>
+      <Tab.Screen name="Search" component={Search} />
+      <Tab.Screen name="Homes" component={HomeList} />
+      <Tab.Screen name="List a home" component={AddHome} />
+      <Tab.Screen name="ListingPage" component={ListingPage} />
+      <Tab.Screen name="UserProfile" component={UserProfile} />
+      <Tab.Screen name="UserProfileTest" component={UserProfileTest} />
       <Tab.Screen
         name="Search"
         component={Search}

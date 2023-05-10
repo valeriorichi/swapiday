@@ -10,13 +10,12 @@ import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import EditProfile from "../components/EditProfile";
 import { ChatContext } from "../contexts/ChatContext";
 
-function UserProfile({ navigation }) {
+function UserProfileTest({ navigation }) {
   const [profileImgUrl, setProfileImgUrl] = useState("");
   const { currentUser, setCurrentUser } = useAuth();
   const [isLoggedIn, setIsLoggedIn] = useContext(LoginContext);
   const [userProfile, setUserProfile] = useState();
   const [isLoading, setIsLoading] = useState(true);
-  const [isEditing, setIsEditing] = useState(false);
   const [senderRecipient, setSenderRecipient] = useContext(ChatContext);
 
   async function getUserProfile(id) {
@@ -31,14 +30,14 @@ function UserProfile({ navigation }) {
     const storage = getStorage();
     const reference = ref(
       storage,
-      `users/${currentUser.uid}/userImages/userImage.jpg`
+      `users/aa7nootX3fXb6H13KcFCbCzCATM2/userImages/userImage.jpg`
     );
     getDownloadURL(reference)
       .then((url) => {
         setProfileImgUrl(url);
       })
       .then(() => {
-        return getUserProfile(currentUser.uid);
+        return getUserProfile("aa7nootX3fXb6H13KcFCbCzCATM2");
       })
       .then((data) => {
         setIsLoading(false);
@@ -54,11 +53,6 @@ function UserProfile({ navigation }) {
       </>
     );
   }
-
-  if (isEditing) {
-    return <EditProfile userProfile={userProfile} />;
-  }
-
   if (userProfile) {
     return (
       <SafeAreaView style={{ flex: 1 }}>
@@ -101,16 +95,6 @@ function UserProfile({ navigation }) {
             >
               List My House
             </Button>
-            <Button
-              style={{
-                width: "40%",
-              }}
-              mode="contained"
-              buttonColor="#39C67F"
-              onPress={() => setIsEditing(true)}
-            >
-              Edit Profile
-            </Button>
           </View>
           <View
             style={{
@@ -134,18 +118,19 @@ function UserProfile({ navigation }) {
               <Text>{userProfile.firstName + " " + userProfile.lastName}</Text>
               <Text>{userProfile.location}</Text>
               <Text>{userProfile.rating + " *"}</Text>
-              {!userProfile.uid === currentUser.uid ? (
-                <Button
-                  mode="contained"
-                  buttonColor="#39C67F"
-                  onPress={() => {
-                    setSenderRecipient(currentUser.email + userProfile);
-                    navigation.navigate("Chat");
-                  }}
-                >
-                  Contact Me
-                </Button>
-              ) : null}
+              <Button
+                mode="contained"
+                buttonColor="#39C67F"
+                onPress={() => {
+                  setSenderRecipient(currentUser.uid + "-" + userProfile.uid);
+                  navigation.navigate("ChatsNav", {
+                    screen: "Chat",
+                    params: { recipient: userProfile.uid },
+                  });
+                }}
+              >
+                Contact Me
+              </Button>
             </View>
           </View>
           <View
@@ -186,4 +171,4 @@ function UserProfile({ navigation }) {
   }
 }
 
-export default UserProfile;
+export default UserProfileTest;

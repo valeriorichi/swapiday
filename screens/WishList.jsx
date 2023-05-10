@@ -38,7 +38,7 @@ function WishList() {
   const navigation = useNavigation();
 
   useEffect(() => {
-    const docRef = doc(database, `userProfilesV2/${currentUser.uid}`);
+    const docRef = doc(database, `userProfiles/${currentUser.uid}`);
     getDoc(docRef)
       .then((doc) => {
         setWishListArray(doc.data().wishList ?? []);
@@ -52,7 +52,7 @@ function WishList() {
     const storage = getStorage();
     Promise.all(
       wishListArray.map((uid) => {
-        const docRef = doc(database, `userProfilesV2/${uid}`);
+        const docRef = doc(database, `userProfiles/${uid}`);
         const reference = ref(storage, `users/${uid}/houseImages`);
         return Promise.all([
           getDoc(docRef).then((doc) => doc.data({ uid, ...doc.data() })),
@@ -62,8 +62,10 @@ function WishList() {
         ]).then(([userData, imageUrl]) => {
           const commentsCount = userData.comments.length;
           const rating = (
-            userData.reviews.reduce((total, review) => total + review, 0) /
-            userData.reviews.length
+            userData.reviews.reduce(
+              (total, review) => total + parseFloat(review),
+              0
+            ) / userData.reviews.length
           ).toFixed(1);
 
           return {
@@ -85,7 +87,7 @@ function WishList() {
   }, [wishListArray]);
 
   const removeItem = (userHomeUid) => {
-    const docRef = doc(database, `userProfilesV2/${currentUser.uid}`);
+    const docRef = doc(database, `userProfiles/${currentUser.uid}`);
     const updatedWishList = wishListArray.filter((uid) => uid !== userHomeUid);
     console.log(updatedWishList);
     updateDoc(docRef, {
@@ -103,9 +105,12 @@ function WishList() {
   const goToListingPage = (userHomeUid) => {
     console.log(userHomeUid);
     alert("Redirecting to ListingPage");
-    navigation.navigate("ListingPage", { searchedUserUid: userHomeUid });
+    navigation.navigate("ListingPage", {
+      searchedUserUid: userHomeUid,
+      fromWishList: true,
+    });
   };
-
+  console.log("userList------>>>", userList);
   return (
     <ScrollView>
       <LogoHeader />

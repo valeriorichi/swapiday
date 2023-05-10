@@ -20,7 +20,10 @@ import WishList from "./screens/WishList";
 import { ChatContextProvider } from "./contexts/ChatContext";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-
+import ListingPage from "./screens/ListingPage";
+import CommentsList from "./screens/CommentsList";
+import RateForm from "./screens/RateForm";
+import ErrorPage from "./screens/ErrorPage.jsx";
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
@@ -34,6 +37,19 @@ const ChatsNav = () => {
           component={Chat}
           options={({ route }) => ({ title: "" })}
         />
+      </Stack.Navigator>
+    </ChatContextProvider>
+  );
+};
+
+const MyStack = () => {
+  return (
+    <ChatContextProvider>
+      <Stack.Navigator>
+        <Stack.Screen name="WishList" component={WishList} />
+        <Stack.Screen name="ListingPage" component={ListingPage} />
+        <Stack.Screen name="Chats" component={Chats} />
+        <Stack.Screen name="CommentsList" component={CommentsList} />
       </Stack.Navigator>
     </ChatContextProvider>
   );
@@ -58,7 +74,7 @@ const MainNavigator = () => {
       />
       <Tab.Screen
         name="Liked Homes"
-        component={WishList}
+        component={MyStack}
         options={{
           tabBarIcon: () => (
             <Icon name="home-heart" size={30} color="#16a34a" />

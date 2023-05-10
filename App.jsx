@@ -58,8 +58,6 @@ const MyStack = () => {
 const MainNavigator = () => {
   return (
     <Tab.Navigator>
-      <Tab.Screen name="reviews" component={Reviews} />
-
       <Tab.Screen
         name="Search"
         component={Search}

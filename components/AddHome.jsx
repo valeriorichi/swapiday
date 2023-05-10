@@ -1,5 +1,7 @@
+import { Text, ScrollView } from 'react-native';
+import React from 'react';
+import LogoHeader from '../screens/LogoHeader';
 import { useState, useContext, useEffect } from 'react';
-import { ScrollView } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 import { doc, updateDoc } from 'firebase/firestore';
 import { database, storage } from '../config/firebase';
@@ -8,19 +10,19 @@ import { LoginContext } from '../contexts/LoggedInContext';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import * as ImagePicker from 'expo-image-picker';
 
-function EditProfile({ userProfile, setIsEditing, isEditing }) {
-  const { currentUser, setCurrentUser } = useAuth();
-  const [isLoggedIn, setIsLoggedIn] = useContext(LoginContext);
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [bio, setBio] = useState('');
-  const [location, setLocation] = useState('');
-  const [img, setImg] = useState('');
+function AddHome({ setAddingHome }) {
+  const [houseHeaderInfo, setHouseHeaderInfo] = useState('');
+  const [houseInfo, setHouseInfo] = useState('');
+  const [houseLocation, setHouseLocation] = useState('');
+  const [houseImg, setHouseImg] = useState('');
+  const [houseImgUrl, setHouseImgUrl] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useContext(LoginContext);
+  const { currentUser, setCurrentUser } = useAuth();
+  const [numberOfRooms, setNumberOfRooms] = useState(null);
 
   useEffect(() => {
     const uploadImage = async () => {
-      //convert image into blob image
       const blobImage = await new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.onload = function () {
@@ -30,17 +32,17 @@ function EditProfile({ userProfile, setIsEditing, isEditing }) {
           reject(new TypeError('Network request failed'));
         };
         xhr.responseType = 'blob';
-        xhr.open('GET', img, true);
+        xhr.open('GET', houseImg, true);
         xhr.send(null);
       });
-      //set metadata of image
+
       const metadata = {
         contentType: 'image/jpeg',
       };
-      //upload image to firebase storage
+
       const uploadTask = ref(
         storage,
-        `users/${currentUser.uid}/userImages/userImage.jpg`
+        `users/${currentUser.uid}/houseImages/data1_0.jpg`
       );
       const uploadPic = uploadBytesResumable(uploadTask, blobImage, metadata);
 
@@ -79,7 +81,7 @@ function EditProfile({ userProfile, setIsEditing, isEditing }) {
           getDownloadURL(uploadTask).then((url) => {
             //update profile with image url
             const docRef = doc(database, 'userProfilesV2', currentUser.uid);
-            updateDoc(docRef, { profileImgUrl: url })
+            updateDoc(docRef, { houseImgUrl: url })
               .then(() => {
                 alert('Image uploaded!');
                 // setIsLoggedIn(true);
@@ -93,107 +95,113 @@ function EditProfile({ userProfile, setIsEditing, isEditing }) {
         }
       );
     };
-    if (img) {
+    if (houseImg) {
       uploadImage();
-      setImg(null);
+      setHouseImg(null);
     }
-  }, [img]);
+  }, [houseImg]);
 
-  const handleSaveChanges = () => {
-    const user = {};
-    user.uid = currentUser.uid;
-    if (firstName) {
-      user.firstName = firstName;
+  const handleImageSelection = async () => {
+    setIsLoading(true);
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: false,
+      aspect: [4, 4],
+      quality: 1,
+      allowsMultipleSelection: true,
+    });
+    if (!result.canceled) {
+      setHouseImg(result.assets[0].uri);
+    } else {
+      setIsLoading(false);
     }
-    if (lastName) {
-      user.lastName = lastName;
-    }
-    if (bio) {
-      user.bio = bio;
-    }
-    if (location) {
-      user.location = location;
-    }
+  };
 
+  const handleSaveHome = () => {
+    const home = {};
+    if (houseHeaderInfo) {
+      home.houseHeaderInfo = houseHeaderInfo;
+    }
+    if (houseInfo) {
+      home.houseInfo = houseInfo;
+    }
+    if (houseLocation) {
+      home.houseLocation = houseLocation;
+    }
+    if (houseImgUrl) {
+      home.houseImgUrl = houseImgUrl;
+    }
     const docRef = doc(database, 'userProfilesV2', currentUser.uid);
-    updateDoc(docRef, user)
+    updateDoc(docRef, home)
       .then(() => {
-        alert(isLoggedIn ? 'Changes saved!' : 'Profile created!');
-        setIsLoggedIn(true);
-        isLoggedIn ? setIsEditing(false) : null;
+        alert(`Home added!`);
+        setAddingHome(false);
       })
       .catch((err) => {
         alert(`Error saving changes: ${err}`);
       });
   };
 
-  const handleImageSelection = async () => {
-    setIsLoading(true);
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 4],
-      quality: 1,
-    });
-    setImg(result.assets[0].uri);
-  };
-
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: 'white', padding: 20 }}>
+    <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
+      <LogoHeader />
+      <Text>{'\n'}</Text>
       <TextInput
-        label="First Name"
-        keyboardType="default"
-        width={300}
-        value={firstName}
-        placeholder={userProfile ? userProfile.firstName : null}
-        onChangeText={(firstName) => {
-          setFirstName(firstName);
-        }}
+        label="Title"
+        value={houseHeaderInfo}
+        onChangeText={(houseHeaderInfo) => setHouseHeaderInfo(houseHeaderInfo)}
       />
       <TextInput
-        label="Last Name"
-        placeholder={userProfile ? userProfile.lastName : null}
-        keyboardType="default"
-        width={300}
-        value={lastName}
-        onChangeText={(lastName) => {
-          setLastName(lastName);
-        }}
-      />
-      <TextInput
-        label="Bio"
-        outlined
-        placeholder={userProfile ? userProfile.bio : null}
-        keyboardType="default"
-        width={300}
-        value={bio}
-        onChangeText={(bio) => {
-          setBio(bio);
-        }}
+        label="Description"
+        multiline={true}
+        numberOfLines={4}
+        value={houseInfo}
+        onChangeText={(houseInfo) => setHouseInfo(houseInfo)}
       />
       <TextInput
         label="Location"
-        placeholder={userProfile ? userProfile.location : null}
-        keyboardType="default"
-        width={300}
-        value={location}
-        onChangeText={(location) => {
-          setLocation(location);
-        }}
+        value={houseLocation}
+        onChangeText={(houseLocation) => setHouseLocation(houseLocation)}
       />
+      <TextInput
+        label="Number of Rooms"
+        keyboardType="numeric"
+        value={numberOfRooms}
+        onChangeText={(numberOfRooms) => setNumberOfRooms(numberOfRooms)}
+      />
+      <Text>{'\n'}</Text>
       <Button
-        loading={isLoading}
-        style="padding=20"
-        onPress={handleImageSelection}
+        style={{
+          margin: 20,
+          width: 150,
+          alignSelf: 'center',
+        }}
+        compact={true}
+        mode="contained"
+        onPress={() => {
+          handleImageSelection();
+        }}
       >
-        Select Profile Image
+        Add Image
       </Button>
 
-      <Button style="padding=20" onPress={handleSaveChanges}>
-        {isLoggedIn ? 'Save Changes' : 'Create Profile'}
+      <Button
+        style={{
+          margin: 20,
+          width: 150,
+          alignSelf: 'center',
+        }}
+        loading={isLoading}
+        compact={true}
+        mode="contained"
+        onPress={() => {
+          handleSaveHome();
+        }}
+      >
+        Add Home
       </Button>
     </ScrollView>
   );
 }
 
-export default EditProfile;
+export default AddHome;

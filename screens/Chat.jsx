@@ -12,7 +12,6 @@ import {
 } from "firebase/firestore";
 import avatar from "../imagesTemp/avatar.png";
 import { auth, database } from "../config/firebase";
-import { ChatContext } from "../contexts/ChatContext";
 
 function Chat({ route }) {
   const [messages, setMessages] = useState([]);
@@ -26,6 +25,7 @@ function Chat({ route }) {
     );
     getDoc(docRef)
       .then((doc) => {
+        console.log(route.params.sender + "-" + route.params.recipient);
         setChat(doc);
         return doc;
       })
@@ -40,7 +40,7 @@ function Chat({ route }) {
             {
               senderRecipient:
                 route.params.sender + "-" + route.params.recipient,
-              sender: user._id,
+              sender: route.params.sender,
               recipient: route.params.recipient,
             }
           );

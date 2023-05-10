@@ -4,11 +4,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button, ActivityIndicator } from 'react-native-paper';
 import { useAuth } from '../contexts/AuthContext';
 import { LoginContext } from '../contexts/LoggedInContext';
-import { database } from '../config/firebase';
+import { database, storage } from '../config/firebase';
 import { doc, getDoc } from 'firebase/firestore';
-import { getStorage, ref, getDownloadURL } from 'firebase/storage';
+import { ref, getDownloadURL } from 'firebase/storage';
 import EditProfile from '../components/EditProfile';
-import { useRoute } from '@react-navigation/native'; // added by Val
 
 function UserProfile() {
   const [profileImgUrl, setProfileImgUrl] = useState('');
@@ -29,7 +28,6 @@ function UserProfile() {
 
   useEffect(() => {
     setIsLoading(true);
-    const storage = getStorage();
     const reference = ref(
       storage,
       `users/${currentUser.uid}/userImages/userImage.jpg`
@@ -59,7 +57,11 @@ function UserProfile() {
 
   if (isEditing) {
     return (
-      <EditProfile setIsEditing={setIsEditing} userProfile={userProfile} />
+      <EditProfile
+        isEditing={isEditing}
+        setIsEditing={setIsEditing}
+        userProfile={userProfile}
+      />
     );
   }
 
@@ -137,7 +139,6 @@ function UserProfile() {
             <View style={{ alignItems: 'center' }}>
               <Text>{userProfile.firstName + ' ' + userProfile.lastName}</Text>
               <Text>{userProfile.location}</Text>
-              <Text>{userProfile.rating + ' *'}</Text>
               <Button
                 mode="contained"
                 buttonColor="#39C67F"

@@ -1,29 +1,109 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { ScrollView } from 'react-native';
-import { Button, TextInput, Image } from 'react-native-paper';
+import { Button, TextInput } from 'react-native-paper';
 import { doc, updateDoc } from 'firebase/firestore';
-import { database } from '../config/firebase';
+import { database, storage } from '../config/firebase';
 import { useAuth } from '../contexts/AuthContext';
 import { LoginContext } from '../contexts/LoggedInContext';
-import { getStorage, ref, uploadBytes } from 'firebase/storage';
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import * as ImagePicker from 'expo-image-picker';
 
-function EditProfile({ userProfile, setIsEditing }) {
+function EditProfile({ userProfile, setIsEditing, isEditing }) {
   const { currentUser, setCurrentUser } = useAuth();
-  const storage = getStorage();
   const [isLoggedIn, setIsLoggedIn] = useContext(LoginContext);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [bio, setBio] = useState('');
   const [location, setLocation] = useState('');
+  const [img, setImg] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const profileImgRef = ref(
-    storage,
-    `users/${currentUser.uid}/userImages/userImage.jpg`
-  );
+  useEffect(() => {
+    console.log('inside useEffect');
+    console.log('img :>> ', img);
+    const uploadImage = async () => {
+      //convert image into blob image
+      const blobImage = await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+          resolve(xhr.response);
+        };
+        xhr.onerror = function () {
+          reject(new TypeError('Network request failed'));
+        };
+        xhr.responseType = 'blob';
+        xhr.open('GET', img, true);
+        xhr.send(null);
+      });
+      //set metadata of image
+      const metadata = {
+        contentType: 'image/jpeg',
+      };
+      //upload image to firebase storage
+      const uploadTask = ref(
+        storage,
+        `users/${currentUser.uid}/userImages/userImage.jpg`
+      );
+      const uploadPic = uploadBytesResumable(uploadTask, blobImage, metadata);
+
+      uploadPic.on(
+        'state_changed',
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log(`Upload is ${progress}% done`);
+          switch (snapshot.state) {
+            case 'paused':
+              console.log('Upload is paused');
+              break;
+            case 'running':
+              console.log('Upload is running');
+              break;
+          }
+        },
+        (error) => {
+          switch (error.code) {
+            case 'storage/unauthorized':
+              console.log('User does not have permission to access the object');
+              break;
+            case 'storage/canceled':
+              console.log('User canceled the upload');
+              break;
+            case 'storage/unknown':
+              console.log(
+                'Unknown error occurred, inspect error.serverResponse'
+              );
+              break;
+          }
+        },
+        () => {
+          // Upload completed successfully, now we can get the download URL
+          getDownloadURL(uploadTask).then((url) => {
+            //update profile with image url
+            const docRef = doc(database, 'userProfilesV2', currentUser.uid);
+            updateDoc(docRef, { profileImgUrl: url })
+              .then(() => {
+                alert('Image uploaded!');
+                // setIsLoggedIn(true);
+                setIsLoading(false);
+                // setIsEditing(false);
+              })
+              .catch((err) => {
+                alert(`Error saving changes: ${err}`);
+              });
+          });
+        }
+      );
+    };
+    if (img) {
+      uploadImage();
+      setImg(null);
+    }
+  }, [img]);
 
   const handleSaveChanges = () => {
     const user = {};
+    user.uid = currentUser.uid;
     if (firstName) {
       user.firstName = firstName;
     }
@@ -40,88 +120,25 @@ function EditProfile({ userProfile, setIsEditing }) {
     const docRef = doc(database, 'userProfilesV2', currentUser.uid);
     updateDoc(docRef, user)
       .then(() => {
-        alert('Changes saved!');
+        alert(isLoggedIn ? 'Changes saved!' : 'Profile created!');
         setIsLoggedIn(true);
-        setIsEditing(false);
+        isLoggedIn ? setIsEditing(false) : null;
       })
       .catch((err) => {
         alert(`Error saving changes: ${err}`);
       });
   };
 
-  const handleImageUpload = () => {
-    ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+  const handleImageSelection = async () => {
+    setIsLoading(true);
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [4, 4],
       quality: 1,
-    })
-      .then((img) => {
-        return fetch(img.assets[0].uri);
-      })
-      .then((file) => {
-        return uploadBytes(profileImgRef, file.blob());
-      })
-      .then((snapshot) => {
-        console.log('snapshot :>> ', snapshot);
-      })
-      .catch((err) => {
-        console.log('err :>> ', err);
-      });
-
-    // const response = await fetch(img.assets[0].uri);
-    // console.log('response :>> ', response);
-    // const blob = response.blob();
-    // console.log('blob :>> ', blob);
-    // uploadBytes(profileImgRef, blob)
-    //   .then((snapshot) => {
-    //     console.log('snapshot');
-    //   })
-    //   .catch((err) => {
-    //     console.log('err :>> ', err);
-    //   });
-
-    // console.log('assets :>> ', img.assets[0].uri);
-    // uploadBytes(profileImgRef, img.assets[0].uri)
-    //   .then((snapshot) => {
-    //     console.log('snapshot >> ', snapshot);
-    //   })
-    // .catch((err) => {
-    //   console.log('err >> ', err);
-    // });
+    });
+    setImg(result.assets[0].uri);
   };
-
-  //   , (response) => {
-  //     if (response.didCancel) {
-  //       alert('User cancelled image picker');
-  //     } else if (response.errorCode) {
-  //       alert(`ImagePicker Error: ${response.errorCode}`);
-  //     } else {
-  //       const image = response.assets[0];
-  //       const uploadTask = ref(
-  //         storage,
-  //         `users/${currentUser.uid}/userImages/userImage.jpg`
-  //       );
-  //       uploadTask.putFile(image.uri).then((snapshot) => {
-  //         console.log('Uploaded a blob or file!');
-  //         getDownloadURL(uploadTask).then((url) => {
-
-  //           const docRef = doc(database, 'userProfilesV2', currentUser.uid);
-  //           updateDoc(docRef, { profileImgUrl: url })
-
-  //             .then(() => {
-  //               alert('Image uploaded!');
-  //               setIsLoggedIn(true);
-  //               setIsEditing(false);
-  //             })
-  //             .catch((err) => {
-  //               alert(`Error saving changes: ${err}`);
-  //             });
-  //         });
-  //       });
-  //     }
-  //   });
-  // };
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: 'white', padding: 20 }}>
@@ -147,6 +164,7 @@ function EditProfile({ userProfile, setIsEditing }) {
       />
       <TextInput
         label="Bio"
+        outlined
         placeholder={userProfile ? userProfile.bio : null}
         keyboardType="default"
         width={300}
@@ -165,11 +183,16 @@ function EditProfile({ userProfile, setIsEditing }) {
           setLocation(location);
         }}
       />
-      <Button style="padding=20" onPress={handleImageUpload}>
-        Upload Profile Image
+      <Button
+        loading={isLoading}
+        style="padding=20"
+        onPress={handleImageSelection}
+      >
+        Select Profile Image
       </Button>
+
       <Button style="padding=20" onPress={handleSaveChanges}>
-        Save Changes
+        {isLoggedIn ? 'Save Changes' : 'Create Profile'}
       </Button>
     </ScrollView>
   );

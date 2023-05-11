@@ -13,6 +13,7 @@ import HomeCard from "../components/HomeCard";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "../contexts/AuthContext";
+
 import {
   doc,
   getDoc,
@@ -26,6 +27,8 @@ import {
   firebase,
   firesrore,
 } from "firebase/firestore";
+
+
 import { ref, getDownloadURL, listAll } from "firebase/storage";
 import ErrorPage from "./ErrorPage";
 import { database, auth, storage } from "../config/firebase";

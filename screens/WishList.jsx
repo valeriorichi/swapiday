@@ -76,7 +76,6 @@ function WishList() {
       wishList: updatedWishList,
     })
       .then(() => {
-        alert("Removed from WishList");
         setWishListArray(updatedWishList);
       })
       .catch((error) => {

@@ -10,9 +10,9 @@ const RateForm = () => {
   });
 
   const [reviewsRating, setReviewsRating] = useState({
-    cleanliness: [],
-    location: [],
-    communication: [],
+    cleanliness: [4.2],
+    location: [4],
+    communication: [4.5],
   });
 
   const handleRating = (category, rating) => {
@@ -52,6 +52,8 @@ const RateForm = () => {
 
   return (
     <View>
+      <Text style={styles.header}>Rate This Property</Text>
+
       <CategoryItem
         category="Cleanliness"
         rating={ratings.cleanliness}
@@ -140,6 +142,12 @@ const styles = StyleSheet.create({
   buttonContainerHover: {
     backgroundColor: "#8ef2a1",
     borderColor: "#999",
+  },
+  header: {
+    fontSize: 24,
+    textAlign: "center",
+    marginTop: 20,
+    marginBottom: 10,
   },
 });
 

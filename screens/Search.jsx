@@ -1,6 +1,6 @@
-import * as React from 'react';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { Button } from 'react-native-paper';
+import * as React from "react";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { Button } from "react-native-paper";
 import {
   View,
   Text,
@@ -8,20 +8,20 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
-} from 'react-native';
-import { useState, useEffect } from 'react';
-import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
-import { getStorage, ref, getDownloadURL, listAll } from 'firebase/storage';
-import { database } from '../config/firebase';
-import LogoHeader from './LogoHeader';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+} from "react-native";
+import { useState, useEffect } from "react";
+import { doc, getDoc, collection, getDocs } from "firebase/firestore";
+import { getStorage, ref, getDownloadURL, listAll } from "firebase/storage";
+import { database } from "../config/firebase";
+import LogoHeader from "./LogoHeader";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-import HomeCard from '../components/HomeCard';
-import { useAuth } from '../contexts/AuthContext';
-import { useNavigation } from '@react-navigation/native';
+import HomeCard from "../components/HomeCard";
+import { useAuth } from "../contexts/AuthContext";
+import { useNavigation } from "@react-navigation/native";
 
 function Search({ navigation }) {
-  const [searchQuery, setSearchQuery] = React.useState('');
+  const [searchQuery, setSearchQuery] = React.useState("");
   const [showCheckinDatePicker, setShowCheckinDatePicker] = useState(false);
   const [showCheckoutDatePicker, setShowCheckoutDatePicker] = useState(false);
   const [checkinDate, setCheckinDate] = useState(new Date());
@@ -36,7 +36,7 @@ function Search({ navigation }) {
   const onChangeSearch = (query) => setSearchQuery(query);
 
   useEffect(() => {
-    const usersCollection = collection(database, 'userProfiles');
+    const usersCollection = collection(database, "userProfiles");
     getDocs(usersCollection)
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
@@ -113,9 +113,8 @@ function Search({ navigation }) {
   }
 
   const goToListingPage = (userHomeUid) => {
-    alert('Redirecting to ListingPage');
-    navigation.navigate('ListingPage', {
-      screen: 'ListingPage',
+    navigation.navigate("ListingPage", {
+      screen: "ListingPage",
       params: {
         searchedUserUid: userHomeUid,
         fromWishList: false,
@@ -130,10 +129,10 @@ function Search({ navigation }) {
         <View
           style={{
             flex: 1,
-            justifyContent: 'space-between',
-            width: '80%',
-            marginLeft: '10%',
-            marginTop: '10%',
+            justifyContent: "space-between",
+            width: "80%",
+            marginLeft: "10%",
+            marginTop: "10%",
           }}
         >
           <View style={styles.searchContainer}>
@@ -147,9 +146,9 @@ function Search({ navigation }) {
 
           <View
             style={{
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
             <TouchableOpacity
@@ -157,10 +156,10 @@ function Search({ navigation }) {
               style={[styles.dateContainer, { marginRight: 10 }]}
             >
               <Text style={styles.dateText}>
-                Check-in Date:{' '}
+                Check-in Date:{" "}
                 {checkinDate.toLocaleDateString() ===
                 new Date().toLocaleDateString()
-                  ? 'Enter'
+                  ? "Enter"
                   : checkinDate?.toLocaleDateString()}
               </Text>
             </TouchableOpacity>
@@ -169,10 +168,10 @@ function Search({ navigation }) {
               style={styles.dateContainer}
             >
               <Text style={styles.dateText}>
-                Check-out Date:{' '}
+                Check-out Date:{" "}
                 {checkoutDate.toLocaleDateString() ===
                 new Date().toLocaleDateString()
-                  ? 'enter'
+                  ? "enter"
                   : checkoutDate.toLocaleDateString()}
               </Text>
             </TouchableOpacity>
@@ -215,7 +214,7 @@ function Search({ navigation }) {
                 setIsSearching(false);
               }}
               style={styles.searchButton}
-              labelStyle={{ fontWeight: 'bold' }}
+              labelStyle={{ fontWeight: "bold" }}
             >
               Search
             </Button>
@@ -239,9 +238,9 @@ function Search({ navigation }) {
         <Text style={styles.header}>Available Homes:</Text>
         <View
           style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            flexWrap: 'wrap',
+            flexDirection: "row",
+            justifyContent: "center",
+            flexWrap: "wrap",
           }}
         >
           {userList.map((userHome, index) => (
@@ -271,8 +270,8 @@ function Search({ navigation }) {
                       style={styles.button}
                       title="Chat"
                       onPress={() => {
-                        navigation.navigate('ChatsNav', {
-                          screen: 'Chat',
+                        navigation.navigate("ChatsNav", {
+                          screen: "Chat",
                           params: {
                             sender: currentUser.uid,
                             recipient: userHome.firstName,
@@ -297,13 +296,13 @@ function Search({ navigation }) {
 const styles = StyleSheet.create({
   searchContainer: {
     borderWidth: 1,
-    borderColor: '#39C67F',
+    borderColor: "#39C67F",
     borderRadius: 10,
     padding: 10,
   },
   searchInput: {
     fontSize: 16,
-    color: '#000',
+    color: "#000",
   },
   containerStyle: {
     flex: 1,
@@ -314,22 +313,22 @@ const styles = StyleSheet.create({
   safeContainerStyle: {
     flex: 1,
     margin: 20,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   logoHeader: {
     paddingTop: 5,
     paddingBottom: 5,
-    width: '100%',
-    resizeMode: 'contain',
-    alignSelf: 'center',
-    justifyContent: 'center',
+    width: "100%",
+    resizeMode: "contain",
+    alignSelf: "center",
+    justifyContent: "center",
     marginTop: 20,
     marginBottom: 20,
   },
   dateContainer: {
     borderWidth: 1,
     borderRadius: 20,
-    borderColor: '#39C67F',
+    borderColor: "#39C67F",
     marginBottom: 10,
   },
   dateInput: {
@@ -341,44 +340,44 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   header: {
-    justifyContent: 'center',
-    textAlign: 'center',
+    justifyContent: "center",
+    textAlign: "center",
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#39C67F',
+    fontWeight: "bold",
+    color: "#39C67F",
     marginTop: 20,
     marginBottom: 20,
   },
   searchButton: {
-    borderColor: '#39C67F',
+    borderColor: "#39C67F",
     width: 225,
-    textAlign: 'middle',
+    textAlign: "middle",
     borderRadius: 10,
     borderWidth: 1,
-    backgroundColor: 'rgba(57,198,127,0.5)',
+    backgroundColor: "rgba(57,198,127,0.5)",
     padding: 10,
   },
   searchButtonText: {
     fontSize: 24,
-    textAlign: 'center',
-    color: '#39C67F',
+    textAlign: "center",
+    color: "#39C67F",
 
     marginTop: -15,
   },
   removeButtonContainer: {
     width: 100,
     marginTop: 5,
-    borderColor: '#39C67F',
+    borderColor: "#39C67F",
     borderRadius: 30,
     borderWidth: 1,
-    backgroundColor: 'rgba(57,198,127,0.5)',
+    backgroundColor: "rgba(57,198,127,0.5)",
   },
   button: {
     padding: 1,
   },
   buttonText: {
-    color: 'black',
-    textAlign: 'center',
+    color: "black",
+    textAlign: "center",
   },
 });
 

@@ -5,7 +5,7 @@ import CommentsList from "./CommentsList";
 import RateForm from "./RateForm";
 import { useRoute } from "@react-navigation/native"; // added by Val
 
-const Reviews = () => {
+const Reviews = ({ navigation }) => {
   // const route = useRoute(); //added by Val
   // const { searchedUserUid } = route.params; //added by Val
   return (
@@ -81,7 +81,7 @@ const Reviews = () => {
       <View>
         <Button
           title="Rate this property"
-          onPress={() => alert("redirect to RateForm")}
+          onPress={() => navigation.navigate("RateForm")}
         />
       </View>
       <CommentsList />

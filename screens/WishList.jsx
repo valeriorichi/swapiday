@@ -76,7 +76,6 @@ function WishList() {
       wishList: updatedWishList,
     })
       .then(() => {
-        alert("Removed from WishList");
         setWishListArray(updatedWishList);
       })
       .catch((error) => {
@@ -85,7 +84,6 @@ function WishList() {
   };
 
   const goToListingPage = (userHomeUid) => {
-    alert("Redirecting to ListingPage");
     navigation.navigate("ListingPage", {
       searchedUserUid: userHomeUid,
       fromWishList: true,

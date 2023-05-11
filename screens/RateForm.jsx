@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Button } from "react-native";
+import { View, Text, TouchableOpacity, Button, StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 const RateForm = () => {
@@ -28,7 +28,6 @@ const RateForm = () => {
       newReviewsRating[category] = [...reviewsRating[category], rating];
     }
     setReviewsRating(newReviewsRating);
-    console.log(newReviewsRating);
   };
 
   const handleClear = () => {
@@ -69,13 +68,18 @@ const RateForm = () => {
         onRating={(rating) => handleRating("communication", rating)}
       />
       <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
-        <Button title="Submit" onPress={handleSubmit} />
-        <Button title="Clear" onPress={handleClear} />
+        <View style={styles.buttonContainer}>
+          <Button title="Submit" onPress={handleSubmit} />
+        </View>
+        <View style={styles.buttonContainer}>
+          <Button title="Clear" onPress={handleClear} />
+        </View>
       </View>
+
       <View style={{ marginTop: 20 }}>
         {Object.entries(averages).map(([category, average]) => (
-          <Text key={category}>
-            {category}: {average.toFixed(1)}
+          <Text key={category} style={styles.category}>
+            ⭐ {category}: {average.toFixed(1)} ⭐
           </Text>
         ))}
       </View>
@@ -87,14 +91,8 @@ const CategoryItem = ({ category, rating, onRating }) => {
   const stars = [1, 2, 3, 4, 5];
 
   return (
-    <View
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-        marginBottom: 10,
-      }}
-    >
-      <Text style={{ marginLeft: 10, marginRight: 50 }}>{category}</Text>
+    <View style={styles.categoryContainer}>
+      <Text style={styles.categoryTitle}>{category}</Text>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         {stars.map((star) => (
           <TouchableOpacity key={star} onPress={() => onRating(star)}>
@@ -110,5 +108,39 @@ const CategoryItem = ({ category, rating, onRating }) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  category: {
+    marginLeft: 20,
+    marginTop: 20,
+    fontSize: 16,
+    textTransform: "capitalize",
+    fontFamily: "Helvetica",
+  },
+  categoryContainer: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    padding: 10,
+    marginVertical: 10,
+  },
+  buttonContainer: {
+    marginTop: 10,
+    backgroundColor: "#D7dfe4",
+    borderRadius: 10,
+    paddingHorizontal: 2,
+    borderWidth: 1,
+    borderColor: "#ccc",
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  buttonContainerHover: {
+    backgroundColor: "#8ef2a1",
+    borderColor: "#999",
+  },
+});
 
 export default RateForm;

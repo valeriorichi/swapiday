@@ -63,19 +63,19 @@ function Chats({ navigation }) {
   return (
     <>
       {chatList.map((item, i) => {
-        const storage = getStorage();
-        const reference = ref(
-          storage,
-          `users/${currentUser.uid}/userImages/userImage.jpg`
-        );
-        getDownloadURL(reference)
-          .then((url) => {
-            setRecipientAvatar(url);
-          })
-          .then(() => {
-            setIsLoading(false);
-          })
-          .catch((e) => console.log(e));
+        // const storage = getStorage();
+        // const reference = ref(
+        //   storage,
+        //   `users/${currentUser.uid}/userImages/userImage.jpg`
+        // );
+        // getDownloadURL(reference)
+        //   .then((url) => {
+        //     setRecipientAvatar(url);
+        //   })
+        //   .then(() => {
+        //     setIsLoading(false);
+        //   })
+        //   .catch((e) => console.log(e));
 
         return (
           <List.Item
@@ -92,7 +92,8 @@ function Chats({ navigation }) {
                 {...props}
                 icon={() => (
                   <Image
-                    source={{ uri: recipientAvatar }}
+                    // source={{ uri: recipientAvatar }}
+                    source={require("../imagesTemp/avatar.png")}
                     style={{ width: 50, height: 50 }}
                   />
                 )}

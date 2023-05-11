@@ -26,6 +26,9 @@ import RateForm from "./screens/RateForm";
 import ErrorPage from "./screens/ErrorPage.jsx";
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
+import { LogBox } from "react-native";
+LogBox.ignoreLogs(["Warning: ..."]); // Ignore log notification by message
+LogBox.ignoreAllLogs(); //Ignore all log notifications
 
 const ChatsNav = () => {
   return (

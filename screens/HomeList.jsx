@@ -13,7 +13,22 @@ import HomeCard from "../components/HomeCard";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "../contexts/AuthContext";
-import { doc, getDoc } from "firebase/firestore";
+
+import {
+  doc,
+  getDoc,
+  updateDoc,
+  FieldValue,
+  arrayUnion,
+  addDoc,
+  collection,
+  arrayRemove,
+  update,
+  firebase,
+  firesrore,
+} from "firebase/firestore";
+
+
 import { ref, getDownloadURL, listAll } from "firebase/storage";
 import ErrorPage from "./ErrorPage";
 import { database, auth, storage } from "../config/firebase";
@@ -71,7 +86,6 @@ function HomeList() {
   }, [wishListArray]);
 
   const goToListingPage = (userHomeUid) => {
-    alert("Redirecting to ListingPage");
     navigation.navigate("ListingPage", { searchedUserUid: userHomeUid });
   };
 

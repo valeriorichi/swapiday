@@ -92,4 +92,4 @@ Here are some screenshots of the Swapiday app:
 
 #
 
-## Swapiday was created by BYTE-BANDITS team as a final project for the Northcoders bootcamp, May 2023.
+## Swapiday was created by BYTE-BANDITS team as the final project for the Northcoders bootcamp, May 2023.

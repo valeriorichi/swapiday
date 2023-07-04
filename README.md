@@ -1,6 +1,6 @@
 # ![Screenshot 1](assets/Header-Logo.png)
 
-Swapiday is a mobile application that allows travelers to swap their holiday homes with others for free. It helps users save money on accommodations and provides an opportunity to explore different cities and countries.
+Swapiday is a mobile application that allows travellers to swap their holiday homes with others for free. It helps users save money on accommodations and provides an opportunity to explore different cities and countries.
 
 ## Table of Contents
 
@@ -16,7 +16,7 @@ Swapiday is a mobile application that allows travelers to swap their holiday hom
 
 ## Introduction
 
-Many travelers face the challenge of finding affordable accommodations while visiting new cities. Swapiday aims to solve this problem by providing a platform for users to exchange their homes with other travelers for the duration of their holiday. This allows users to save money on accommodations and explore new destinations.
+Many travellers face the challenge of finding affordable accommodations while visiting new cities. Swapiday aims to solve this problem by providing a platform for users to exchange their homes with other travelers for the duration of their holiday. This allows users to save money on accommodations and explore new destinations.
 
 This repository contains the source code for the Swapiday mobile application, built using JavaScript and React Native with Expo. The backend is powered by Firebase, providing a secure and scalable infrastructure for user management and data storage.
 

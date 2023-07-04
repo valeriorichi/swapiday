@@ -75,16 +75,16 @@ Check out our video presentation to get a closer look at Swapiday:
 Here are some screenshots of the Swapiday app:
 
 <p align="center">
-  <img src="screenshots/Screenshot1.jpg" alt="Screenshot 1" width="120px">
-  <img src="screenshots/Screenshot2.jpg" alt="Screenshot 2" width="120px">
-  <img src="screenshots/Screenshot3.jpg" alt="Screenshot 3" width="120px">
-  <img src="screenshots/Screenshot11.jpg" alt="Screenshot 11" width="120px">
+  <img src="screenshots/Screenshot1.jpg" alt="Screenshot 1" width="150px">
+  <img src="screenshots/Screenshot2.jpg" alt="Screenshot 2" width="150px">
+  <img src="screenshots/Screenshot3.jpg" alt="Screenshot 3" width="150px">
+  <img src="screenshots/Screenshot11.jpg" alt="Screenshot 11" width="150px">
 </p>
 <p align="center">
-  <img src="screenshots/Screenshot4.jpg" alt="Screenshot 4" width="120px"  style="vertical-align: top;">
-  <img src="screenshots/Screenshot5.jpg" alt="Screenshot 5" width="120px"  style="vertical-align: top;">
-  <img src="screenshots/Screenshot6.jpg" alt="Screenshot 6" width="120px"  style="vertical-align: top;">
-  <img src="screenshots/Screenshot7.jpg" alt="Screenshot 7" width="120px" style="vertical-align: top;">
+  <img src="screenshots/Screenshot4.jpg" alt="Screenshot 4" width="150px"  style="vertical-align: top;">
+  <img src="screenshots/Screenshot5.jpg" alt="Screenshot 5" width="150px"  style="vertical-align: top;">
+  <img src="screenshots/Screenshot6.jpg" alt="Screenshot 6" width="150px"  style="vertical-align: top;">
+  <img src="screenshots/Screenshot7.jpg" alt="Screenshot 7" width="150px" style="vertical-align: top;">
 </p>
 
 <img src="screenshots/Screenshot9.png" alt="Screenshot 9" style="background-color: white;">
